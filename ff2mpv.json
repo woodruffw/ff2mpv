@@ -1,0 +1,7 @@
+{
+    "name": "ff2mpv",
+    "description": "ff2mpv's external manifest",
+    "path": "/home/william/scripts/ff2mpv",
+    "type": "stdio",
+    "allowed_extensions": ["ff2mpv@yossarian.net"]
+}

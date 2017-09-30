@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "json"
+
+len = STDIN.read(4).unpack("L").first
+url = JSON.parse STDIN.read(len)
+
+pid = spawn "mpv", "--", url, in: :close, out: :close, err: :close
+Process.detach pid

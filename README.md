@@ -10,7 +10,7 @@ context button.
 
 ## Usage
 
-First, install the addon from [AMO](https://addons.mozilla.org).
+First, install the addon from [AMO](https://addons.mozilla.org/en-US/firefox/addon/ff2mpv/).
 
 Then, copy `ff2mpv` (the Ruby script) to somewhere of your choice. Make sure it's executable.
 

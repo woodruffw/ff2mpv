@@ -10,6 +10,9 @@ context button.
 
 ## Usage
 
+**IMPORTANT**: If you update the addon in your browser, **make sure to update the native host as
+well**!
+
 First, install the addon from [AMO](https://addons.mozilla.org/en-US/firefox/addon/ff2mpv/).
 
 Then, copy `ff2mpv` (the Ruby script) to somewhere of your choice. Make sure it's executable.

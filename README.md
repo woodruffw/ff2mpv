@@ -15,13 +15,11 @@ well**!
 
 First, install the addon from [AMO](https://addons.mozilla.org/en-US/firefox/addon/ff2mpv/).
 
-Then, copy either `ff2mpv` (the Ruby script) or `ff2mpv.py` (the Python script) to somewhere of your choice. Make sure it's executable.
+Then, follow your system's installation directions on the Wiki:
 
-Finally, copy `ff2mpv.json` (in this repository) into `~/.mozilla/native-messaging-hosts/`. Open
-it in your editor, and change the `path` field to correspond to the path where you saved
-the script of your choice.
+Linux: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-Linux
 
-After that, everything should work.
+macOS: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-macOS
 
 ## License
 

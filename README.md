@@ -21,6 +21,8 @@ Linux: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-Linux
 
 macOS: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-macOS
 
+[A Go version of the native client is also available](https://git.clsr.net/util/ff2mpv-go/).
+
 ## License
 
 The source code in this repository is licensed under the MIT license.

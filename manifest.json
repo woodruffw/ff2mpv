@@ -20,7 +20,7 @@
 	"commands": {
 		"_execute_browser_action": {
 			"suggested_key": {
-				"default": "Ctrl+Alt+M"
+				"default": "Ctrl+Shift+V"
 			},
 			"description": "Play the current URL in mpv"
 		}

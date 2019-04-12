@@ -5,7 +5,7 @@ function ff2mpv(url) {
 browser.contextMenus.create({
     id: "ff2mpv",
     title: "Play in MPV",
-    contexts: ["link", "image", "video", "audio", "selection"]
+    contexts: ["link", "image", "video", "audio", "selection", "frame"]
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
@@ -14,7 +14,7 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
             /* These should be mutually exclusive, but,
                if they aren't, this is a reasonable priority.
             */
-            url = info.linkUrl || info.srcUrl || info.selectionText;
+            url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
             if (url) ff2mpv(url);
             break;
     }

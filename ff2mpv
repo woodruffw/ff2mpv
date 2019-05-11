@@ -6,5 +6,5 @@ require "json"
 len = STDIN.read(4).unpack("L").first
 url = JSON.parse(STDIN.read(len))["url"]
 
-pid = spawn "mpv", "--no-terminal", "--", url, in: :close, out: :close, err: :close
+pid = spawn "mpv", "--no-terminal", "--", url, in: :close, out: "/dev/null", err: "/dev/null"
 Process.detach pid

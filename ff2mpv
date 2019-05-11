@@ -3,7 +3,7 @@
 
 require "json"
 
-len = STDIN.read(4).unpack("L").first
+len = STDIN.read(4).unpack1("L")
 url = JSON.parse(STDIN.read(len))["url"]
 
 pid = spawn "mpv", "--no-terminal", "--", url, in: :close, out: "/dev/null", err: "/dev/null"

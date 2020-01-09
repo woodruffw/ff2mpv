@@ -1,15 +1,55 @@
 #!/usr/bin/env python3
-import sys, struct, json
+import sys, struct, json, tempfile
 from subprocess import Popen, DEVNULL
 
 def main():
     message = get_message()
+
     url = message.get('url')
-    args = ['mpv', '--no-terminal', '--', url]
+
+    cookies_fname = create_cookiefile(message.get('cookies'));
+
+    ytdloptions = {
+        "cookies" : cookies_fname
+    }
+    mpv_ytdloptions = '--ytdl-raw-options={}'.format(
+        ",".join("{}={}".format(k,v) for k,v in ytdloptions.items()))
+
+    args = ['mpv', '--no-terminal',
+            '--cookies', '--cookies-file={}'.format(cookies_fname),
+            mpv_ytdloptions, '--', url]
     Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+
     # Need to respond something to avoid "Error: An unexpected error occurred"
     # in Browser Console.
     send_message('ok')
+
+
+def create_cookiefile(cookies):
+    """
+    create a temporary file in netscape cookie format and return its path
+    """
+    cookiefile = tempfile.NamedTemporaryFile(mode="w+", delete=False)
+    cookiefile.write("""# Netscape HTTP Cookie File
+# http://curl.haxx.se/rfc/cookie_spec.html
+# This is a generated file!  Do not edit.
+
+""")
+    for cookie in cookies:
+        if "expirationDate" in cookie:
+            expdate = str(cookie.get("expirationDate"))
+        else:
+            expdate = "0"
+        tokens = [cookie.get("domain"),
+                  str(cookie.get("domain").startswith(".")).upper(),
+                  cookie.get("path"), str(cookie.get("secure")).upper(),
+                  expdate, cookie.get("name"),
+                  cookie.get("value")]
+        line = "\t".join(tokens)
+        cookiefile.write(line)
+        cookiefile.write("\n")
+    cookiefile.close()
+    return cookiefile.name
 
 
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side

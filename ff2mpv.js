@@ -1,5 +1,14 @@
 function ff2mpv(url) {
-    browser.runtime.sendNativeMessage("ff2mpv", { url: url });
+    browser.cookies.getAll({
+        url: url
+    }).then(
+        function(sitecookies) {
+            browser.runtime.sendNativeMessage("ff2mpv", {
+                url: url,
+                cookies: sitecookies
+            });
+        }
+    )
 }
 
 browser.contextMenus.create({

@@ -52,6 +52,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: standard
         run: |
-          npm install standard --global
+          npm install standard --save-dev
           standard ff2mpv.js
 

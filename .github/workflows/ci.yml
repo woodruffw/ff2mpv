@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  schedule:
+    - cron: '0 12 * * *'
+
+jobs:
+  lint-ruby:
+    strategy:
+      matrix:
+        ruby:
+          - "2.5"
+          - "2.6"
+          # - "2.7"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: rubocop
+        run: |
+          gem install rubocop
+          rubocop ff2mpv
+  lint-python:
+    strategy:
+      matrix:
+        python:
+          - "3.6"
+          - "3.7"
+          - "3.8"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: deps
+        run: |
+          pip install flake8 black
+      - name: lint
+        run: |
+          black --check ff2mpv.py
+          flake8 ff2mpv.py
+  lint-js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: eslint
+        run: |
+          sudo npm install eslint --global
+          eslint --no-eslintrc --parser-options=ecmaVersion:6 ff2mpv.js
+

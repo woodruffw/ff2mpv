@@ -50,8 +50,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: standard
+      - name: eslint
         run: |
-          sudo npm install standard --global
-          standard ff2mpv.js
+          sudo npm install eslint --global
+          eslint --no-eslintrc --parser-options=ecmaVersion:6 ff2mpv.js
 

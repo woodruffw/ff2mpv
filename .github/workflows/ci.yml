@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  schedule:
+    - cron: '0 12 * * *'
+
+jobs:
+  lint-ruby:
+    strategy:
+      matrix:
+        ruby:
+          - "2.5"
+          - "2.6"
+          # - "2.7"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+      - name: rubocop
+        run: |
+          gem install rubocop
+          rubocop ff2mpv
+  lint-python:
+    strategy:
+      matrix:
+        python:
+          - "3.6"
+          - "3.7"
+          - "3.8"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: black
+        run: |
+          pip install black
+          black --check ff2mpv.py
+  lint-js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: standard
+        run: |
+          npm install standard --global
+          standard ff2mpv.js
+

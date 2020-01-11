@@ -39,10 +39,13 @@ jobs:
       - uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
-      - name: black
+      - name: deps
         run: |
-          pip install black
+          pip install flake8 black
+      - name: lint
+        run: |
           black --check ff2mpv.py
+          flake8 ff2mpv.py
   lint-js:
     runs-on: ubuntu-latest
     steps:

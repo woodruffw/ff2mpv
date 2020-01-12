@@ -11,18 +11,19 @@ def main():
     message = get_message()
 
     url = message.get('url')
+    ytdloptions = {}
+    additional_mpv_args = []
 
-    cookies_fname = create_cookiefile(message.get('cookies'));
+    if "cookies" in message:
+        cookies_fname = create_cookiefile(message.get("cookies"));
+        ytdloptions["cookies"] = cookies_fname
+        additional_mpv_args += ['--cookies', '--cookies-file={}'.format(cookies_fname)]
 
-    ytdloptions = {
-        "cookies" : cookies_fname
-    }
     mpv_ytdloptions = '--ytdl-raw-options={}'.format(
         ",".join("{}={}".format(k,v) for k,v in ytdloptions.items()))
 
-    args = ['mpv', '--no-terminal',
-            '--cookies', '--cookies-file={}'.format(cookies_fname),
-            mpv_ytdloptions, '--', url]
+    args = ['mpv', '--no-terminal', mpv_ytdloptions] + additional_mpv_args + ["--", url]
+
 
     Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
 

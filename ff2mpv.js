@@ -1,4 +1,4 @@
-function ff2mpv(url) {
+function ff2mpv_cookies(url) {
     browser.cookies.getAll({
         url: url
     }).then(
@@ -11,9 +11,21 @@ function ff2mpv(url) {
     )
 }
 
+function ff2mpv(url) {
+    browser.runtime.sendNativeMessage("ff2mpv", {
+	    url: url
+    });
+}
+
 browser.contextMenus.create({
     id: "ff2mpv",
     title: "Play in MPV",
+    contexts: ["link", "image", "video", "audio", "selection", "frame"]
+});
+
+browser.contextMenus.create({
+    id: "ff2mpv_cookies",
+    title: "Play in MPV (Cookies)",
     contexts: ["link", "image", "video", "audio", "selection", "frame"]
 });
 
@@ -25,6 +37,14 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
             */
             url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
             if (url) ff2mpv(url);
+            break;
+
+        case "ff2mpv_cookies":
+            /* These should be mutually exclusive, but,
+               if they aren't, this is a reasonable priority.
+            */
+            url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
+            if (url) ff2mpv_cookies(url);
             break;
     }
 });

@@ -1,19 +1,7 @@
-function ff2mpv_cookies(url) {
-    browser.cookies.getAll({
-        url: url
-    }).then(
-        function(sitecookies) {
-            browser.runtime.sendNativeMessage("ff2mpv", {
-                url: url,
-                cookies: sitecookies
-            });
-        }
-    )
-}
-
-function ff2mpv(url) {
+function ff2mpv(url, cookies={}) {
     browser.runtime.sendNativeMessage("ff2mpv", {
-	    url: url
+        url: url,
+        cookies: cookies
     });
 }
 
@@ -44,7 +32,11 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
                if they aren't, this is a reasonable priority.
             */
             url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
-            if (url) ff2mpv_cookies(url);
+            if (url) {
+                browser.cookies.getAll({url: url}).then((cookies) => {
+                    ff2mpv(url, cookies);
+                });
+            }
             break;
     }
 });

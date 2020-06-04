@@ -1,6 +1,6 @@
-The MIT License (MIT)
+The MIT License (MIT) with restrictions
 
-Copyright (c) 2017 William Woodruff <william @ yossarian.net>
+Copyright (c) 2020 William Woodruff <william @ yossarian.net>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,30 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+The following terms additionally apply and override any above terms for
+applicable parties:
+
+You may not use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software in a military or law enforcement context,
+defined as follows:
+
+1. A military context is a professional context where the intended application
+of the Software is integration or use with or by military software, tools
+(software or hardware), or personnel. This includes contractors and
+subcontractors as well as research affiliates of any military	organization.
+
+2. A law enforcement context is a professional context where the intended
+application of the Software is integration or use with or by law enforcement
+software, tools (software or hardware), or personnel. This includes
+contractors and subcontractors as well as research affiliates of any law
+enforcement organization.
+
+Entities that sell or license to military or law enforcement organizations
+may use the Software under the original terms, but only in contexts that do
+not assist or supplement the sold or licensed product.
+
+Students and academics who are affiliated with research institutions may use
+the Software under the original terms, but only in contexts that do not assist
+or supplement collaboration or affiliation with any military or law
+enforcement organization.

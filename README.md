@@ -1,6 +1,8 @@
 ff2mpv
 ======
 
+![license](https://raster.shields.io/badge/license-MIT%20with%20restrictions-green.png)
+
 This is a Firefox addon for playing URLs in MPV.
 
 Clicking the little icon in your toolbar will make MPV attempt to play the current URL.

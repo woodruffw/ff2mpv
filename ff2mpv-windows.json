@@ -1,0 +1,9 @@
+{
+    "name": "ff2mpv",
+    "description": "ff2mpv's native manifest",
+    "path": "ff2mpv.bat",
+    "type": "stdio",
+    "allowed_extensions": ["ff2mpv@yossarian.net"]
+}
+
+

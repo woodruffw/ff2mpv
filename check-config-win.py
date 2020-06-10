@@ -1,3 +1,4 @@
+#!/usr/bin/env/python3
 '''
 A Python script that attempts to check that the configuration of your
 nativeMessaging app is set up correctly

@@ -45,7 +45,7 @@ jobs:
       - name: lint
         run: |
           black --check ff2mpv.py check-config-win.py
-          flake8 ff2mpv.py check-config.win.py
+          flake8 ff2mpv.py check-config-win.py
   lint-js:
     runs-on: ubuntu-latest
     steps:

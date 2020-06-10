@@ -10,7 +10,6 @@ script.
 """
 import json
 import os
-import re
 import winreg
 
 key_path = "Software\\Mozilla\\NativeMessagingHosts\\ff2mpv"

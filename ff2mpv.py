@@ -8,12 +8,18 @@ from subprocess import Popen, DEVNULL
 
 def main():
     message = get_message()
+    opt = message.get("opt")
     url = message.get("url")
-    args = ["mpv", "--no-terminal", "--", url]
-    Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
-    # Need to respond something to avoid "Error: An unexpected error occurred"
-    # in Browser Console.
-    send_message("ok")
+    if opt == "video":
+        args = ["mpv", "--no-terminal", "--", url]
+        Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+        # Need to respond something to avoid "Error: An unexpected error occurred"
+        # in Browser Console.
+        send_message("ok")
+    elif opt == "novideo":
+        args = ["mpv", "--no-video", "--", url]
+        Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+        send_message("ok")
 
 
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side

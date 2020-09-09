@@ -4,7 +4,14 @@
 require "json"
 
 len = STDIN.read(4).unpack1("L")
-url = JSON.parse(STDIN.read(len))["url"]
+data = JSON.parse(STDIN.read(len))
+url = data["url"]
+opt = data["opt"]
 
-pid = spawn "mpv", "--no-terminal", "--", url, in: :close, out: "/dev/null", err: "/dev/null"
+if opt == "video"
+  pid = spawn "mpv", "--no-terminal", "--", url, in: :close, out: "/dev/null", err: "/dev/null"
+elsif opt == "novideo"
+  pid = spawn "mpv", "--no-video", "--", url, in: :close, out: "/dev/null", err: "/dev/null"
+end
+
 Process.detach pid

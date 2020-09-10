@@ -10,16 +10,15 @@ def main():
     message = get_message()
     opt = message.get("opt")
     url = message.get("url")
-    if opt == "video":
-        args = ["mpv", "--no-terminal", "--", url]
-        Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
-        # Need to respond something to avoid "Error: An unexpected error occurred"
-        # in Browser Console.
-        send_message("ok")
-    elif opt == "novideo":
-        args = ["mpv", "--no-video", "--", url]
-        Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
-        send_message("ok")
+
+    mpv_args = ["--no-terminal"]
+
+    if not opt.get("video"):
+        mpv_args.append("--no-video")
+
+    args = ["mpv", *mpv_args, "--", url]
+    Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+    send_message("ok")
 
 
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side

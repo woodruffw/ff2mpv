@@ -8,10 +8,12 @@ data = JSON.parse(STDIN.read(len))
 url = data["url"]
 opt = data["opt"]
 
-if opt == "video"
-  pid = spawn "mpv", "--no-terminal", "--", url, in: :close, out: "/dev/null", err: "/dev/null"
-elsif opt == "novideo"
-  pid = spawn "mpv", "--no-video", "--", url, in: :close, out: "/dev/null", err: "/dev/null"
+args = %w[--no-terminal]
+
+unless opt["video"]
+  args << "--no-video"
 end
+
+pid = spawn "mpv", *args, "--", url, in: :close, out: "/dev/null", err: "/dev/null"
 
 Process.detach pid

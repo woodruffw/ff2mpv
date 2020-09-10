@@ -1,5 +1,5 @@
 function ff2mpv(url, opt) {
-    browser.runtime.sendNativeMessage("ff2mpv", { url: url, opt: opt});
+    browser.runtime.sendNativeMessage("ff2mpv", { url: url, opt: opt });
 }
 
 browser.contextMenus.create({
@@ -20,15 +20,15 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
                if they aren't, this is a reasonable priority.
             */
             url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
-            if (url) ff2mpv(url, "video");
+            if (url) ff2mpv(url, {"video": true});
             break;
         case "ff2mpv_novideo":
             url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
-            if (url) ff2mpv(url, "novideo");
+            if (url) ff2mpv(url, {"video": false});
             break;
     }
 });
 
 browser.browserAction.onClicked.addListener((tab) => {
-    ff2mpv(tab.url, "video");
+    ff2mpv(tab.url, {"video": true});  //clicking the extension icon plays with video
 });

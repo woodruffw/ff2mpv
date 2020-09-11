@@ -13,11 +13,13 @@ def main():
 
     mpv_args = ["--no-terminal"]
 
-    if not opt.get("video"):
+    if not opt.get("video", True):
         mpv_args.append("--no-video")
 
     args = ["mpv", *mpv_args, "--", url]
     Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+    # Need to respond something to avoid "Error: An unexpected error occurred"
+    # in Browser Console.
     send_message("ok")
 
 

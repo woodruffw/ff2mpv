@@ -9,10 +9,7 @@ url = data["url"]
 opt = data["opt"]
 
 args = %w[--no-terminal]
-
-unless opt["video"]
-  args << "--no-video"
-end
+args << "--no-video" unless opt["video"]
 
 pid = spawn "mpv", *args, "--", url, in: :close, out: "/dev/null", err: "/dev/null"
 

@@ -29,6 +29,6 @@ Windows: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-Windows
 
 ## License
 
-The source code in this repository is licensed under the MIT license.
+The source code in this repository is licensed under a *modified* MIT License.
 
 The icons in this repository are licensed by the MPV team under GNU LGPL, version 2.1.

@@ -8,13 +8,9 @@ from subprocess import Popen, DEVNULL
 
 def main():
     message = get_message()
-    opt = message.get("opt")
     url = message.get("url")
 
     mpv_args = ["--no-terminal"]
-
-    if not opt.get("video", True):
-        mpv_args.append("--no-video")
 
     args = ["mpv", *mpv_args, "--", url]
     Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)

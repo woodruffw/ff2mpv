@@ -6,10 +6,8 @@ require "json"
 len = STDIN.read(4).unpack1("L")
 data = JSON.parse(STDIN.read(len))
 url = data["url"]
-opt = data["opt"]
 
 args = %w[--no-terminal]
-args << "--no-video" unless opt["video"]
 
 pid = spawn "mpv", *args, "--", url, in: :close, out: "/dev/null", err: "/dev/null"
 

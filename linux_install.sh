@@ -18,4 +18,4 @@ else
 fi
 
 # Replace the path in the copied JSON file
-sed -i "s|$OLD_PATH|$CURRENT_DIR|g" $JSON_DEST/ff2mpv.json
+sed -i "s|$OLD_PATH|$CURRENT_DIR/ff2mpv.py|g" $JSON_DEST/ff2mpv.json

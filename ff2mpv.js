@@ -2,6 +2,17 @@ function ff2mpv(url) {
     browser.runtime.sendNativeMessage("ff2mpv", { url: url });
 }
 
+function notifyContentScript(e) {
+    browser.tabs.query({active: true, currentWindow: true}, function(tabs){
+        browser.tabs.sendMessage(tabs[0].id, {launch: true});
+    });
+}
+
+browser.contentScripts.register({
+    matches: ["<all_urls>"],
+    js: [{file: "/content_script.js"}]
+});
+
 browser.contextMenus.create({
     id: "ff2mpv",
     title: "Play in MPV",
@@ -21,5 +32,6 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 browser.browserAction.onClicked.addListener((tab) => {
+    notifyContentScript();
     ff2mpv(tab.url);
 });

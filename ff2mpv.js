@@ -1,18 +1,9 @@
 function ff2mpv(url) {
-    notifyContentScript();
+    browser.tabs.executeScript({
+        code: "video = document.getElementsByTagName('video');video[0].pause();"
+    });
     browser.runtime.sendNativeMessage("ff2mpv", { url: url });
 }
-
-function notifyContentScript() {
-    browser.tabs.query({active: true, currentWindow: true}, function(tabs){
-        browser.tabs.sendMessage(tabs[0].id, {launch: true});
-    });
-}
-
-browser.contentScripts.register({
-    matches: ["<all_urls>"],
-    js: [{file: "/content_script.js"}]
-});
 
 browser.contextMenus.create({
     id: "ff2mpv",

@@ -38,5 +38,4 @@
     },
 
     "permissions": ["nativeMessaging", "contextMenus", "activeTab"]
-
 }

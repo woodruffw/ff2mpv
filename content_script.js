@@ -1,4 +1,4 @@
-function handleMessage(request) {
+function handleMessage(_request) {
     pauseVideo() //we don't care about message contents, pause on any message received
 };
 

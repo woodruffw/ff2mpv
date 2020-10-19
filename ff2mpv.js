@@ -1,8 +1,9 @@
 function ff2mpv(url) {
+    notifyContentScript();
     browser.runtime.sendNativeMessage("ff2mpv", { url: url });
 }
 
-function notifyContentScript(e) {
+function notifyContentScript() {
     browser.tabs.query({active: true, currentWindow: true}, function(tabs){
         browser.tabs.sendMessage(tabs[0].id, {launch: true});
     });
@@ -32,6 +33,5 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 });
 
 browser.browserAction.onClicked.addListener((tab) => {
-    notifyContentScript();
     ff2mpv(tab.url);
 });

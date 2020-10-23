@@ -3,8 +3,8 @@
 
 require "json"
 
-len = STDIN.read(4).unpack1("L")
-data = JSON.parse(STDIN.read(len))
+len = $stdin.read(4).unpack1("L")
+data = JSON.parse($stdin.read(len))
 url = data["url"]
 
 args = %w[--no-terminal]

@@ -1,3 +1,2 @@
 @echo off
-
-python -u "ff2mpv.py"
+call python ff2mpv.py

@@ -22,8 +22,7 @@ def main():
 
     # Need to respond something to avoid "Error: An unexpected error occurred"
     # in Browser Console.
-    if url:
-        send_message(url)
+    send_message("ok")
 
 
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side

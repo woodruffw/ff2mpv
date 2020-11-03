@@ -20,6 +20,8 @@ def main():
 
     Popen(args, **kwargs)
 
+    # Need to respond something to avoid "Error: An unexpected error occurred"
+    # in Browser Console.
     if url:
         send_message(url)
 

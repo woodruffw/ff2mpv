@@ -12,7 +12,9 @@ def main():
     url = message.get("url")
 
     args = ["mpv", "--no-terminal", "--", url]
+
     kwargs = {}
+    # https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Closing_the_native_app
     if platform.system() == "Windows":
         kwargs["creationflags"] = CREATE_BREAKAWAY_FROM_JOB
 

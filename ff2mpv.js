@@ -1,7 +1,3 @@
-function onResponse(response) {
-    console.log("Received: " + response);
-}
-
 function onError(error) {
     console.log(`${error}`);
 }
@@ -10,8 +6,7 @@ function ff2mpv(url) {
     browser.tabs.executeScript({
         code: "video = document.getElementsByTagName('video');video[0].pause();",
     });
-    var sending = browser.runtime.sendNativeMessage("ff2mpv", { url: url });
-    sending.then(onResponse, onError);
+    browser.runtime.sendNativeMessage("ff2mpv", { url: url }).catch(onError);
 }
 
 browser.contextMenus.create({

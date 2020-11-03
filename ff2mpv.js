@@ -1,8 +1,12 @@
+function onError(error) {
+    console.log(`${error}`);
+}
+
 function ff2mpv(url) {
     browser.tabs.executeScript({
         code: "video = document.getElementsByTagName('video');video[0].pause();"
     });
-    browser.runtime.sendNativeMessage("ff2mpv", { url: url });
+    browser.runtime.sendNativeMessage("ff2mpv", { url: url }).catch(onError);
 }
 
 browser.contextMenus.create({

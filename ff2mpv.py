@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
 
-import sys
-import struct
 import json
-from subprocess import Popen, DEVNULL
+import platform
+import struct
+import sys
+from subprocess import Popen, CREATE_BREAKAWAY_FROM_JOB
 
 
 def main():
     message = get_message()
     url = message.get("url")
 
-    mpv_args = ["--no-terminal"]
+    args = ["mpv", "--no-terminal", "--", url]
 
-    args = ["mpv", *mpv_args, "--", url]
-    Popen(args, stdin=DEVNULL, stdout=DEVNULL, stderr=DEVNULL)
+    kwargs = {}
+    # https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Closing_the_native_app
+    if platform.system() == "Windows":
+        kwargs["creationflags"] = CREATE_BREAKAWAY_FROM_JOB
+
+    Popen(args, **kwargs)
+
     # Need to respond something to avoid "Error: An unexpected error occurred"
     # in Browser Console.
     send_message("ok")

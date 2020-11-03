@@ -4,7 +4,7 @@ function onError(error) {
 
 function ff2mpv(url) {
     browser.tabs.executeScript({
-        code: "video = document.getElementsByTagName('video');video[0].pause();",
+        code: "video = document.getElementsByTagName('video');video[0].pause();"
     });
     browser.runtime.sendNativeMessage("ff2mpv", { url: url }).catch(onError);
 }
@@ -12,7 +12,7 @@ function ff2mpv(url) {
 browser.contextMenus.create({
     id: "ff2mpv",
     title: "Play in MPV",
-    contexts: ["link", "image", "video", "audio", "selection", "frame"],
+    contexts: ["link", "image", "video", "audio", "selection", "frame"]
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {

@@ -4,7 +4,7 @@ import json
 import platform
 import struct
 import sys
-from subprocess import Popen, CREATE_BREAKAWAY_FROM_JOB
+import subprocess
 
 
 def main():
@@ -16,9 +16,9 @@ def main():
     kwargs = {}
     # https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Closing_the_native_app
     if platform.system() == "Windows":
-        kwargs["creationflags"] = CREATE_BREAKAWAY_FROM_JOB
+        kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
 
-    Popen(args, **kwargs)
+    subprocess.Popen(args, **kwargs)
 
     # Need to respond something to avoid "Error: An unexpected error occurred"
     # in Browser Console.

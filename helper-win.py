@@ -28,8 +28,8 @@ def main():
 
     error = False
     wdir = os.path.dirname(__file__)
-    subkey_json = fr"{wdir}\ff2mpv-windows.json"
-    key_path = r"Software\Mozilla\NativeMessagingHosts\ff2mpv"
+    ff2mpv_json = fr"{wdir}\ff2mpv-windows.json"
+    ff2mpv_key = r"Software\Mozilla\NativeMessagingHosts\ff2mpv"
     # Assuming current user overrides local machine.
     hkeys = {"HKEY_CURRENT_USER": winreg.HKEY_CURRENT_USER,
                 "HKEY_LOCAL_MACHINE": winreg.HKEY_LOCAL_MACHINE}
@@ -37,9 +37,9 @@ def main():
     print("- Checking Registry:")
     for k in hkeys:
         try:
-            print(fr"{k}\{key_path} ... ", end="")
-            key_open = winreg.OpenKey(hkeys[k], key_path)
-            hkey = hkeys[k]
+            print(fr"{k}\{ff2mpv_key} ... ", end="")
+            key_open = winreg.OpenKey(hkeys[k], ff2mpv_key)
+            hkey_found = hkeys[k]
             print("Found.")
         except FileNotFoundError:
             print("Not found.")
@@ -53,30 +53,30 @@ def main():
         if choice == "2":
             # The intermediate missing key are also created.
             key_open = winreg.CreateKey(
-                hkeys["HKEY_CURRENT_USER"], key_path)
+                hkeys["HKEY_CURRENT_USER"], ff2mpv_key)
             print("Key created.")
 
     if choice != "3":
-        key_value = winreg.QueryValue(key_open, "")
+        ff2mpv_value = winreg.QueryValue(key_open, "")
         if choice == "2":
-            if key_value != subkey_json:
+            if ff2mpv_value != ff2mpv_json:
                 winreg.SetValue(hkeys["HKEY_CURRENT_USER"],
-                                key_path, winreg.REG_SZ, subkey_json)
-                key_value = winreg.QueryValue(key_open, "")
+                                ff2mpv_key, winreg.REG_SZ, ff2mpv_json)
+                ff2mpv_value = winreg.QueryValue(key_open, "")
                 print("Value set/updated.")
             else:
                 print("Nothing to update.")
 
         else:
-            if key_value != "":
-                print("Value of the key is:", key_value)
+            if ff2mpv_value != "":
+                print("Value of the key is:", ff2mpv_value)
                 try:
-                    os.path.exists(key_value)
+                    os.path.exists(ff2mpv_value)
                     try:
-                        json.load(open(key_value, "r"))
+                        json.load(open(ff2mpv_value, "r"))
                     except json.decoder.JSONDecodeError:
                         print(
-                            f"error: Is {os.path.basename(key_value)} a JSON file?")
+                            f"error: Is {os.path.basename(ff2mpv_value)} a JSON file?")
                 except FileNotFoundError:
                     print("error: The file does not exist.")
                     error = True
@@ -94,7 +94,8 @@ def main():
 
     else:
         if found_key:
-            winreg.DeleteKey(hkey, key_path)
+            # Remove ff2mpv key and all value under it.
+            winreg.DeleteKey(hkey_found, ff2mpv_key)
             print("Key deleted.")
         else:
             print("Nothing to remove.")

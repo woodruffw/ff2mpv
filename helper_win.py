@@ -105,8 +105,9 @@ if args.OPT != "3":
     try:
         subprocess.run("mpv --version", check=False)
     except FileNotFoundError:
+        print("error: Path for mpv missing.")
         print(
-            'error: Path for mpv missing.\n\nPress Win + R, then type or copy/past "rundll32.exe sysdm.cpl,EditEnvironmentVariables".'
+            '\nPress Win + R, then type or copy/past "rundll32.exe sysdm.cpl,EditEnvironmentVariables".'
         )
         print(
             'Add the mpv folder into system or user variable "Path".\nRestart Firefox if it was running.\n'

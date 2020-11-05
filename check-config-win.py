@@ -20,25 +20,19 @@ group = parser.add_mutually_exclusive_group(required=True)
 group.add_argument(
     "-c",
     "--check",
-    action="store_const",
-    const="1",
-    dest="OPT",
+    action="store_true",
     help="only checks the installation, no modification",
 )
 group.add_argument(
     "-i",
     "--install",
-    action="store_const",
-    const="2",
-    dest="OPT",
+    action="store_true",
     help="installs ff2mpv registry key or updates the path value",
 )
 group.add_argument(
     "-u",
     "--uninstall",
-    action="store_const",
-    const="3",
-    dest="OPT",
+    action="store_true",
     help="removes ff2mpv registry key and all it's values",
 )
 args = parser.parse_args()
@@ -69,14 +63,14 @@ for k in HKEYS:
     break
 
 if not found_key:
-    if args.OPT == "2":
+    if args.install:
         # The intermediate missing key are also created.
         key_open = winreg.CreateKey(HKEYS["HKEY_CURRENT_USER"], FF2MPV_KEY)
         print("Key created.")
 
-if args.OPT != "3":
+if not args.uninstall:
     ff2mpv_value = winreg.QueryValue(key_open, "")
-    if args.OPT == "2":
+    if args.install:
         if ff2mpv_value != FF2MPV_JSON:
             winreg.SetValue(
                 HKEYS["HKEY_CURRENT_USER"], FF2MPV_KEY, winreg.REG_SZ, FF2MPV_JSON
@@ -107,7 +101,7 @@ if args.OPT != "3":
     except FileNotFoundError:
         print("error: Path for mpv missing.")
         print(
-            '\nPress Win + R, then type or copy/past "rundll32.exe sysdm.cpl,EditEnvironmentVariables".'
+            '\nPress Win + R, then type or copy/paste "rundll32.exe sysdm.cpl,EditEnvironmentVariables".'
         )
         print(
             'Add the mpv folder into system or user variable "Path".\nRestart Firefox if it was running.\n'

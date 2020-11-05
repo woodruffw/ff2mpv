@@ -46,7 +46,7 @@ jobs:
       - name: lint
         run: |
           black --check ff2mpv.py helper_win.py
-          flake8 ff2mpv.py helper_win.py
+          flake8 --max-line-length=120 ff2mpv.py helper_win.py
   lint-js:
     runs-on: ubuntu-latest
     steps:

@@ -3,7 +3,7 @@
 A Python script that attempts to check that the configuration of your
 nativeMessaging app is set up correctly
 
-Currently requires Python 3.
+Currently requires Python 3.6 minimum.
 
 If you find more issues with setting this up, let's see if we can add to this
 script.

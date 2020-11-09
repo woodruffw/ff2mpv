@@ -52,7 +52,7 @@ for key_name, reg_key in HKEYS.items():
     try:
         print(fr"{key_name}\{FF2MPV_KEY} ... ", end="")
         key_open = winreg.OpenKey(reg_key, FF2MPV_KEY)
-        hkey_found = HKEYS[key_name]
+        hkey_found = reg_key
         print("Found.")
     except FileNotFoundError:
         print("Not found.")

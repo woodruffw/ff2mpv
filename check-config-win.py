@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-A Python script that attempts to check that the configuration of your
-nativeMessaging app is set up correctly
+A Python script that check, install/update or uninstall the configuration
+of your NativeMessaging app for ff2mpv.
 
 Currently requires Python 3.6 minimum.
 
@@ -48,11 +48,11 @@ HKEYS = {
 error = False
 found_key = False
 print("- Checking Registry:")
-for k in HKEYS:
+for key_name, reg_key in HKEYS.items():
     try:
-        print(fr"{k}\{FF2MPV_KEY} ... ", end="")
-        key_open = winreg.OpenKey(HKEYS[k], FF2MPV_KEY)
-        hkey_found = HKEYS[k]
+        print(fr"{key_name}\{FF2MPV_KEY} ... ", end="")
+        key_open = winreg.OpenKey(reg_key, FF2MPV_KEY)
+        hkey_found = HKEYS[key_name]
         print("Found.")
     except FileNotFoundError:
         print("Not found.")
@@ -69,6 +69,7 @@ if not found_key:
         print("Key created.")
 
 if not args.uninstall:
+    # Install/Update case
     ff2mpv_value = winreg.QueryValue(key_open, "")
     if args.install:
         if ff2mpv_value != FF2MPV_JSON:
@@ -80,16 +81,16 @@ if not args.uninstall:
         else:
             print("Nothing to update.")
 
+    # Check case
     else:
         if ff2mpv_value != "":
             print("Value of the key is:", ff2mpv_value)
-            try:
-                os.path.exists(ff2mpv_value)
+            if os.path.exists(ff2mpv_value):
                 try:
                     json.load(open(ff2mpv_value, "r"))
                 except json.decoder.JSONDecodeError:
                     print(f"error: Is {os.path.basename(ff2mpv_value)} a JSON file?")
-            except FileNotFoundError:
+            else:
                 print("error: The file does not exist.")
                 error = True
         else:
@@ -101,7 +102,7 @@ if not args.uninstall:
     except FileNotFoundError:
         print("error: Path for mpv missing.")
         print(
-            '\nPress Win + R, then type or copy/paste "rundll32.exe sysdm.cpl,EditEnvironmentVariables".'
+            '\nPress Win (key between Ctrl and Alt), then type "Environment Variables".'
         )
         print(
             'Add the mpv folder into system or user variable "Path".\nRestart Firefox if it was running.\n'
@@ -110,6 +111,7 @@ if not args.uninstall:
     else:
         print("mpv OK.")
 
+# Uninstall case
 else:
     error = True
     if found_key:

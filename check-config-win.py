@@ -1,64 +1,125 @@
-#!/usr/bin/env/python3
+#!/usr/bin/env python3
 """
-A Python script that attempts to check that the configuration of your
-nativeMessaging app is set up correctly
+A Python script that check, install/update or uninstall the configuration
+of your NativeMessaging app for ff2mpv.
 
-Currently requires Python 3.
+Currently requires Python 3.6 minimum.
 
 If you find more issues with setting this up, let's see if we can add to this
 script.
 """
+import argparse
 import json
 import os
+import subprocess
 import winreg
 
-key_path = "Software\\Mozilla\\NativeMessagingHosts\\ff2mpv"
+# Command-Line
+parser = argparse.ArgumentParser(description="Helper for ff2mpv on windows.")
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument(
+    "-c",
+    "--check",
+    action="store_true",
+    help="only checks the installation, no modification",
+)
+group.add_argument(
+    "-i",
+    "--install",
+    action="store_true",
+    help="installs ff2mpv registry key or updates the path value",
+)
+group.add_argument(
+    "-u",
+    "--uninstall",
+    action="store_true",
+    help="removes ff2mpv registry key and all it's values",
+)
+args = parser.parse_args()
+
+WDIR = os.path.dirname(__file__)
+FF2MPV_JSON = fr"{WDIR}\ff2mpv-windows.json"
+FF2MPV_KEY = r"Software\Mozilla\NativeMessagingHosts\ff2mpv"
 # Assuming current user overrides local machine.
-key_roots = ["HKEY_CURRENT_USER", "HKEY_LOCAL_MACHINE"]
-
+HKEYS = {
+    "HKEY_CURRENT_USER": winreg.HKEY_CURRENT_USER,
+    "HKEY_LOCAL_MACHINE": winreg.HKEY_LOCAL_MACHINE,
+}
+error = False
 found_key = False
-
-for root in key_roots:
-    key = winreg.OpenKey(getattr(winreg, root), key_path)
+print("- Checking Registry:")
+for key_name, reg_key in HKEYS.items():
     try:
-        print("Checking:", root, key_path)
-        res = winreg.QueryValueEx(key, "")
+        print(fr"{key_name}\{FF2MPV_KEY} ... ", end="")
+        key_open = winreg.OpenKey(reg_key, FF2MPV_KEY)
+        hkey_found = reg_key
+        print("Found.")
     except FileNotFoundError:
-        print("...error finding key")
+        print("Not found.")
+        error = True
         continue
-
+    error = False
     found_key = True
     break
 
 if not found_key:
-    raise ValueError("Could not find a registry entry, aborting.")
+    if args.install:
+        # The intermediate missing key are also created.
+        key_open = winreg.CreateKey(HKEYS["HKEY_CURRENT_USER"], FF2MPV_KEY)
+        print("Key created.")
 
-json_path = res[0]
-print("Path from registry key is:", json_path)
-if not os.path.exists(json_path):
-    raise ValueError("JSON file does not exist:", json_path)
+if not args.uninstall:
+    # Install/Update case
+    ff2mpv_value = winreg.QueryValue(key_open, "")
+    if args.install:
+        if ff2mpv_value != FF2MPV_JSON:
+            winreg.SetValue(
+                HKEYS["HKEY_CURRENT_USER"], FF2MPV_KEY, winreg.REG_SZ, FF2MPV_JSON
+            )
+            ff2mpv_value = winreg.QueryValue(key_open, "")
+            print("Value set/updated.\nRestart Firefox if it was running.")
+        else:
+            print("Nothing to update.")
 
-try:
-    bat_data = json.load(open(json_path, "r"))
-except json.decoder.JSONDecodeError:
-    raise ValueError("Parsing error. Is {} a JSON file?".format(json_path))
+    # Check case
+    else:
+        if ff2mpv_value != "":
+            print("Value of the key is:", ff2mpv_value)
+            if os.path.exists(ff2mpv_value):
+                try:
+                    json.load(open(ff2mpv_value, "r"))
+                except json.decoder.JSONDecodeError:
+                    print(f"error: Is {os.path.basename(ff2mpv_value)} a JSON file?")
+            else:
+                print("error: The file does not exist.")
+                error = True
+        else:
+            print("Empty value in the key.")
 
-bat_path = bat_data["path"]
-print("Path from JSON is:", bat_path)
-if not os.path.exists(bat_path):
-    raise ValueError(".bat does not exist:", bat_path)
+    print('- Environment variable "Path":')
+    try:
+        subprocess.run("mpv --version", check=False)
+    except FileNotFoundError:
+        print("error: Path for mpv missing.")
+        print(
+            '\nPress Win (key between Ctrl and Alt), then type "Environment Variables".'
+        )
+        print(
+            'Add the mpv folder into system or user variable "Path".\nRestart Firefox if it was running.\n'
+        )
+        error = True
+    else:
+        print("mpv OK.")
 
-py_lines = open(bat_path, "r").readlines()
-py_path = None
-for line in py_lines:
-    if line.startswith("call python "):
-        py_path = line[12:].replace("\\\\", "\\").strip()
+# Uninstall case
+else:
+    error = True
+    if found_key:
+        # Remove ff2mpv key and all value under it.
+        winreg.DeleteKey(hkey_found, FF2MPV_KEY)
+        print("Key deleted.")
+    else:
+        print("Nothing to remove.")
 
-if not py_path:
-    raise ValueError("No python script in the batch file.")
-
-print("Path from batch file is:", py_path)
-if not os.path.exists(py_path):
-    raise ValueError("Python file does not exist:", py_path)
-
-print("Looks good! Give it a try from Firefox.")
+if not error:
+    print("Looks good! Give it a try from Firefox.")

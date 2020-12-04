@@ -2,8 +2,19 @@
 
 # Some environment path variables
 CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-MOZ_DEST="$HOME/.mozilla"
-JSON_DEST="$MOZ_DEST/native-messaging-hosts"
+case "$(uname)" in
+    Linux*)
+        MOZ_DEST="$HOME/.mozilla"
+        JSON_DEST="$MOZ_DEST/native-messaging-hosts"
+        ;;
+    Darwin*)
+        MOZ_DEST="$HOME/Library/Application Support/Mozilla"
+        JSON_DEST="$MOZ_DEST/NativeMessagingHosts"
+        ;;
+    *)
+    echo "Unsupported OS, please follow the manual instructions in the wiki"
+    exit 1
+esac
 OLD_PATH="/home/william/scripts/ff2mpv"
 
 # Copying the JSON

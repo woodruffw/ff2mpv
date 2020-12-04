@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import os
 import platform
 import struct
 import sys
@@ -11,6 +12,11 @@ def main():
     message = get_message()
     url = message.get("url")
 
+    new_env = os.environ.copy()
+    # HACK: We have to enumerate all possible locations a user may have installed mpv or youtube-dl to on Darwin
+    # See https://github.com/woodruffw/ff2mpv/issues/13 for more information
+    new_env["PATH"] = f"{new_env['PATH']}:{os.getenv('HOME')}/.nix-profile/bin:/run/current-system/sw/bin:/usr/bin:/usr/local/bin:/opt/bin:/opt/local/bin"
+
     args = ["mpv", "--no-terminal", "--", url]
 
     kwargs = {}
@@ -18,7 +24,7 @@ def main():
     if platform.system() == "Windows":
         kwargs["creationflags"] = subprocess.CREATE_BREAKAWAY_FROM_JOB
 
-    subprocess.Popen(args, **kwargs)
+    subprocess.Popen(args, **kwargs, env=new_env)
 
     # Need to respond something to avoid "Error: An unexpected error occurred"
     # in Browser Console.

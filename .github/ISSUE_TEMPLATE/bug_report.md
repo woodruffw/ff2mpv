@@ -7,13 +7,14 @@ assignees: ''
 
 ---
 
-**IMPORTANT: Please fill out every section below. Bug reports with missing information will be given a lower priority or closed outright.**
+**IMPORTANT: Please fill out every section below. Bug reports with missing information will be
+given a lower priority or closed outright.**
 
 ## Describe the bug
 
 A clear and concise description of what the bug is.
 
-## To Reproduce
+## Reproduction steps
 
 Steps to reproduce the behavior:
 1. Go to '...'
@@ -36,6 +37,6 @@ If applicable, add screenshots to help explain your problem.
  - MPV version
  - youtube-dl version
 
-## Additional context
+## Additional context (optional)
 
 Add any other context about the problem here.

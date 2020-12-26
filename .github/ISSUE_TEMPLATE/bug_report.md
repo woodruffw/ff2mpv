@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+**IMPORTANT: Please check the [Common problems](https://github.com/woodruffw/ff2mpv/wiki/Common-problems) page for debugging tips before submitting an issue. Duplicates of any information on that page will be closed.**
+
 **IMPORTANT: Please fill out every section below. Bug reports with missing information will be
 given a lower priority or closed outright.**
 

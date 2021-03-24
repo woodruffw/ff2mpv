@@ -16,7 +16,7 @@ args = %w[--no-terminal]
 # from, say, Firefox. The real fix is to modify `launchd.conf`, but that's
 # invasive and maybe not what users want in the general case.
 # Hence this nasty hack.
-ENV["PATH"] = "/usr/local/bin:#{ENV["PATH"]}" if RUBY_PLATFORM =~ /darwin/
+ENV["PATH"] = "/usr/local/bin:#{ENV['PATH']}" if RUBY_PLATFORM =~ /darwin/
 
 pid = spawn "mpv", *args, "--", url, in: :close, out: "/dev/null", err: "/dev/null"
 

@@ -30,7 +30,6 @@ def main():
         path = os.environ.get("PATH")
         os.environ["PATH"] = f"/usr/local/bin:{path}"
 
-
     subprocess.Popen(args, **kwargs)
 
     # Need to respond something to avoid "Error: An unexpected error occurred"

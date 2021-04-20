@@ -12,15 +12,11 @@ browser.contextMenus.create({
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
-    switch (info.menuItemId) {
-        case "ff2mpv":
-            url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
-            if (url) {
-                browser.cookies.getAll({url: url}).then((cookies) => {
-                    ff2mpv(url, cookies);
-                });
-            }
-            break;
+    url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
+    if (url) {
+        browser.cookies.getAll({url: url}).then((cookies) => {
+            ff2mpv(url, cookies);
+        });
     }
 });
 

@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
-import sys
-import struct
 import json
+import os
+import os.path
+import re
+import struct
+import sys
 import tempfile
 from subprocess import Popen, DEVNULL
 
@@ -14,7 +17,7 @@ def main():
     ytdloptions = {}
     additional_mpv_args = []
 
-    if "cookies" in message:
+    if "cookies" in message and is_whitelisted(url, get_whitelist()):
         cookies_fname = create_cookiefile(message.get("cookies"));
         ytdloptions["cookies"] = cookies_fname
         additional_mpv_args += ['--cookies', '--cookies-file={}'.format(cookies_fname)]
@@ -67,6 +70,24 @@ def get_message():
     length = struct.unpack("@I", raw_length)[0]
     message = sys.stdin.buffer.read(length).decode("utf-8")
     return json.loads(message)
+
+
+def get_whitelist():
+    path = os.path.join(os.getenv('XDG_CONFIG_HOME'), 'ff2mpv/whitelist.txt')
+    if not os.path.isfile(path):
+        path = os.path.join(os.getenv('HOME'),  '.config/ff2mpv/whitelist.txt')
+        if not os.path.isfile(path):
+            return ['a^'] # impossible regex
+    file = open(path, 'r')
+    return [line[:-1] for line in file.readlines()] # strip newline characters
+
+
+def is_whitelisted(url, whitelist):
+    for entry in whitelist:
+        pattern = re.compile(entry)
+        if pattern.match(url):
+            return True
+    return False
 
 
 def send_message(message):

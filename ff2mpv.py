@@ -79,12 +79,11 @@ def create_cookiefile(cookies):
 
 
 def get_config_path(file=''):
-    path = os.path.join(os.getenv('XDG_CONFIG_HOME'), 'ff2mpv', file)
-    if not os.path.exists(path):
-        path = os.path.join(os.getenv('HOME'), '.config/ff2mpv', file)
-        if not os.path.exists(path):
-            return ''
-    return path
+    home = os.path.expanduser('~')
+    if home == '':
+        return ''
+    confighome = os.getenv('XDG_CONFIG_HOME', os.path.join(home, '.config'))
+    return os.path.join(confighome, 'ff2mpv', file)
 
 
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side

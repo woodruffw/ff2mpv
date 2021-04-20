@@ -9,7 +9,6 @@ import struct
 import subprocess
 import sys
 import tempfile
-from subprocess import Popen, DEVNULL
 
 
 def main():
@@ -18,7 +17,7 @@ def main():
     url = message.get('url')
     ytdloptions = {}
     additional_mpv_args = []
-    
+
     kwargs = {}
     # https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Closing_the_native_app
     if platform.system() == "Windows":
@@ -42,9 +41,9 @@ def main():
 
     mpv_ytdloptions = '--ytdl-raw-options={}'.format(
         ",".join("{}={}".format(k,v) for k,v in ytdloptions.items()))
-    
+
     args = ['mpv', '--no-terminal', mpv_ytdloptions] + additional_mpv_args + ["--", url]
-    
+
     subprocess.Popen(args, **kwargs)
 
     # Need to respond something to avoid "Error: An unexpected error occurred"

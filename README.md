@@ -1,6 +1,8 @@
 ff2mpv
 ======
 
+![license](https://raster.shields.io/badge/license-MIT%20with%20restrictions-green.png)
+
 This is a Firefox addon for playing URLs in MPV.
 
 Clicking the little icon in your toolbar will make MPV attempt to play the current URL.
@@ -21,10 +23,12 @@ Linux: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-Linux
 
 macOS: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-macOS
 
+Windows: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-Windows
+
 [A Go version of the native client is also available](https://git.clsr.net/util/ff2mpv-go/).
 
 ## License
 
-The source code in this repository is licensed under the MIT license.
+The source code in this repository is licensed under a *modified* MIT License.
 
 The icons in this repository are licensed by the MPV team under GNU LGPL, version 2.1.

@@ -33,6 +33,7 @@ jobs:
           - "3.6"
           - "3.7"
           - "3.8"
+          - "3.9"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -44,8 +45,8 @@ jobs:
           pip install flake8 black
       - name: lint
         run: |
-          black --check ff2mpv.py
-          flake8 ff2mpv.py
+          black --check ff2mpv.py check-config-win.py
+          flake8 --max-line-length=120 ff2mpv.py check-config-win.py
   lint-js:
     runs-on: ubuntu-latest
     steps:

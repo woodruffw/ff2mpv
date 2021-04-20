@@ -78,6 +78,15 @@ def create_cookiefile(cookies):
     return cookiefile.name
 
 
+def get_config_path(file=''):
+    path = os.path.join(os.getenv('XDG_CONFIG_HOME'), 'ff2mpv', file)
+    if not os.path.exists(path):
+        path = os.path.join(os.getenv('HOME'), '.config/ff2mpv', file)
+        if not os.path.exists(path):
+            return ''
+    return path
+
+
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side
 def get_message():
     raw_length = sys.stdin.buffer.read(4)
@@ -89,11 +98,9 @@ def get_message():
 
 
 def get_whitelist():
-    path = os.path.join(os.getenv('XDG_CONFIG_HOME'), 'ff2mpv/whitelist.txt')
-    if not os.path.isfile(path):
-        path = os.path.join(os.getenv('HOME'),  '.config/ff2mpv/whitelist.txt')
-        if not os.path.isfile(path):
-            return ['a^'] # impossible regex
+    path = get_config_path('whitelist.txt')
+    if path == '':
+        return ['a^'] # impossible regex
     file = open(path, 'r')
     return [line[:-1] for line in file.readlines()] # strip newline characters
 

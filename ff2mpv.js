@@ -11,26 +11,9 @@ browser.contextMenus.create({
     contexts: ["link", "image", "video", "audio", "selection", "frame"]
 });
 
-browser.contextMenus.create({
-    id: "ff2mpv_cookies",
-    title: "Play in MPV (Cookies)",
-    contexts: ["link", "image", "video", "audio", "selection", "frame"]
-});
-
 browser.contextMenus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case "ff2mpv":
-            /* These should be mutually exclusive, but,
-               if they aren't, this is a reasonable priority.
-            */
-            url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
-            if (url) ff2mpv(url);
-            break;
-
-        case "ff2mpv_cookies":
-            /* These should be mutually exclusive, but,
-               if they aren't, this is a reasonable priority.
-            */
             url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
             if (url) {
                 browser.cookies.getAll({url: url}).then((cookies) => {

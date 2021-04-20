@@ -39,7 +39,7 @@ def main():
         ytdloptions["cookies"] = cookies_fname
         additional_mpv_args += ['--cookies', '--cookies-file={}'.format(cookies_fname)]
 
-    mpv_ytdloptions = '--ytdl-raw-options={}'.format(
+    mpv_ytdloptions = '--ytdl-raw-options-append={}'.format(
         ",".join("{}={}".format(k,v) for k,v in ytdloptions.items()))
 
     args = ['mpv', '--no-terminal', mpv_ytdloptions] + additional_mpv_args + ["--", url]

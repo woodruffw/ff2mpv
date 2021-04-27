@@ -45,7 +45,8 @@ jobs:
           pip install flake8 black
       - name: lint
         run: |
-          black --check ff2mpv.py check-config-win.py
+          black ff2mpv.py check-config-win.py
+          git diff --exit-code
           flake8 --max-line-length=120 ff2mpv.py check-config-win.py
   lint-js:
     runs-on: ubuntu-latest

@@ -106,8 +106,7 @@ def get_whitelist():
 
 
 def is_whitelisted(url, whitelist):
-    def is_whitelisted(url, whitelist):
-        return any(pattern.match(url) for pattern in whitelist)
+    return any(pattern.match(url) for pattern in whitelist)
 
 
 def send_message(message):

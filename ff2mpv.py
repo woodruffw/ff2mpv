@@ -3,6 +3,7 @@
 import json
 import os
 import os.path
+import pathlib
 import platform
 import re
 import struct
@@ -79,7 +80,7 @@ def create_cookiefile(cookies):
 
 
 def get_config_path(file=''):
-    home = os.path.expanduser('~')
+    home = pathlib.Path.home()
     if home == '':
         return ''
     confighome = os.getenv('XDG_CONFIG_HOME', os.path.join(home, '.config'))

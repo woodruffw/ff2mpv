@@ -101,16 +101,13 @@ def get_whitelist():
     path = get_config_path('whitelist.txt')
     if path == '':
         return ['a^'] # impossible regex
-    file = open(path, 'r')
-    return [line[:-1] for line in file.readlines()] # strip newline characters
+    with open(path, 'r') as io:
+        return [re.compile(line.rstrip()) for line in io]
 
 
 def is_whitelisted(url, whitelist):
-    for entry in whitelist:
-        pattern = re.compile(entry)
-        if pattern.match(url):
-            return True
-    return False
+    def is_whitelisted(url, whitelist):
+        return any(pattern.match(url) for pattern in whitelist)
 
 
 def send_message(message):

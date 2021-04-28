@@ -25,7 +25,7 @@ Examples:
 .*\.fau\..*/.*
 ```
 The `/playlist` one sends cookies only if the link is a playlist.
-This is useful if you want to ply private playlists but don't want to send cookies for normal videos.
+This is useful if you want to play private playlists but don't want to send cookies for normal videos.
 
 ## Installation
 

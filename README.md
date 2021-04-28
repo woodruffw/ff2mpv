@@ -10,7 +10,24 @@ Clicking the little icon in your toolbar will make MPV attempt to play the curre
 If you want to play a specific URL on a page, right click it and click the "Play in MPV"
 context button.
 
-## Usage
+## Cookies
+
+You can enable cookie support for individual sites via a whitelist.
+The whitelist supports regular expressions in order to cover subdomains.
+Please remember to escape dots (`.`) like so: `\.`.
+
+**Do not use '.*' - it is a big problem for your privacy**
+
+Examples:
+```
+.*\.youtube\.com/.*
+.*\.youtube\.com/playlist.*
+.*\.fau\..*/.*
+```
+The `/playlist` one sends cookies only if the link is a playlist.
+This is useful if you want to ply private playlists but don't want to send cookies for normal videos.
+
+## Installation
 
 **IMPORTANT**: If you update the addon in your browser, **make sure to update the native host as
 well**!

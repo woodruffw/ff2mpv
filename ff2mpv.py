@@ -82,9 +82,12 @@ def create_cookiefile(cookies):
 def get_config_path(file=''):
     home = pathlib.Path.home()
     if home == '':
-        return ''
+        raise ValueError
     confighome = os.getenv('XDG_CONFIG_HOME', os.path.join(home, '.config'))
-    return os.path.join(confighome, 'ff2mpv', file)
+    if os.path.isdir(confighome):
+        return os.path.join(confighome, 'ff2mpv', file)
+    else:
+        return os.path.join(home, '.ff2mpv', file)
 
 
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side
@@ -98,8 +101,9 @@ def get_message():
 
 
 def get_whitelist():
-    path = get_config_path('whitelist.txt')
-    if path == '':
+    try:
+        path = get_config_path('whitelist')
+    except ValueError:
         return ['a^'] # impossible regex
     with open(path, 'r') as io:
         return [re.compile(line.rstrip()) for line in io]

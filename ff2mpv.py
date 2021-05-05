@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import fnmatch
 import json
 import os
 import os.path
@@ -106,7 +107,7 @@ def get_whitelist():
     except ValueError:
         return ['a^'] # impossible regex
     with open(path, 'r') as io:
-        return [re.compile(line.rstrip()) for line in io]
+        return [fnmatch.translate(line.rstrip()) for line in io]
 
 
 def is_whitelisted(url, whitelist):

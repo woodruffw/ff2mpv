@@ -1,18 +1,24 @@
 #!/usr/bin/env python3
 
+import fnmatch
 import json
 import os
+import os.path
+import pathlib
 import platform
+import re
 import struct
-import sys
 import subprocess
+import sys
+import tempfile
 
 
 def main():
     message = get_message()
-    url = message.get("url")
 
-    args = ["mpv", "--no-terminal", "--", url]
+    url = message.get('url')
+    ytdloptions = {}
+    additional_mpv_args = []
 
     kwargs = {}
     # https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Closing_the_native_app
@@ -30,11 +36,59 @@ def main():
         path = os.environ.get("PATH")
         os.environ["PATH"] = f"/usr/local/bin:{path}"
 
+    if "cookies" in message and is_whitelisted(url, get_whitelist()):
+        cookies_fname = create_cookiefile(message.get("cookies"));
+        ytdloptions["cookies"] = cookies_fname
+        additional_mpv_args += ['--cookies', '--cookies-file={}'.format(cookies_fname)]
+
+    mpv_ytdloptions = '--ytdl-raw-options-append={}'.format(
+        ",".join("{}={}".format(k,v) for k,v in ytdloptions.items()))
+
+    args = ['mpv', '--no-terminal', mpv_ytdloptions] + additional_mpv_args + ["--", url]
+
     subprocess.Popen(args, **kwargs)
 
     # Need to respond something to avoid "Error: An unexpected error occurred"
     # in Browser Console.
     send_message("ok")
+
+
+def create_cookiefile(cookies):
+    """
+    create a temporary file in netscape cookie format and return its path
+    """
+    cookiefile = tempfile.NamedTemporaryFile(mode="w+", delete=False)
+    cookiefile.write("""# Netscape HTTP Cookie File
+# http://curl.haxx.se/rfc/cookie_spec.html
+# This is a generated file!  Do not edit.
+
+""")
+    for cookie in cookies:
+        if "expirationDate" in cookie:
+            expdate = str(cookie.get("expirationDate"))
+        else:
+            expdate = "0"
+        tokens = [cookie.get("domain"),
+                  str(cookie.get("domain").startswith(".")).upper(),
+                  cookie.get("path"), str(cookie.get("secure")).upper(),
+                  expdate, cookie.get("name"),
+                  cookie.get("value")]
+        line = "\t".join(tokens)
+        cookiefile.write(line)
+        cookiefile.write("\n")
+    cookiefile.close()
+    return cookiefile.name
+
+
+def get_config_path(file=''):
+    home = pathlib.Path.home()
+    if home == '':
+        raise ValueError
+    confighome = os.getenv('XDG_CONFIG_HOME', os.path.join(home, '.config'))
+    if os.path.isdir(confighome):
+        return os.path.join(confighome, 'ff2mpv', file)
+    else:
+        return os.path.join(home, '.ff2mpv', file)
 
 
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side
@@ -45,6 +99,22 @@ def get_message():
     length = struct.unpack("@I", raw_length)[0]
     message = sys.stdin.buffer.read(length).decode("utf-8")
     return json.loads(message)
+
+
+def get_whitelist():
+    try:
+        path = get_config_path('whitelist')
+    except ValueError:
+        return [re.compile('a^')] # impossible regex
+    if os.path.isfile(path):
+        with open(path, 'r') as io:
+            return [re.compile(fnmatch.translate(line.rstrip())) for line in io]
+    else:
+        return [re.compile('a^')] # impossible regex
+
+
+def is_whitelisted(url, whitelist):
+    return any(pattern.match(url) for pattern in whitelist)
 
 
 def send_message(message):

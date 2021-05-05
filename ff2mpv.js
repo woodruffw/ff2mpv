@@ -1,12 +1,15 @@
-function onError(error) {
-    console.log(`${error}`);
-}
-
-function ff2mpv(url) {
+function ff2mpv(url, cookies={}) {
     browser.tabs.executeScript({
         code: "video = document.getElementsByTagName('video');video[0].pause();"
     });
-    browser.runtime.sendNativeMessage("ff2mpv", { url: url }).catch(onError);
+    browser.runtime.sendNativeMessage("ff2mpv", {
+        url: url,
+        cookies: cookies
+    }).catch(onError);
+}
+  
+function onError(error) {
+    console.log(`${error}`);
 }
 
 browser.contextMenus.create({
@@ -16,14 +19,11 @@ browser.contextMenus.create({
 });
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
-    switch (info.menuItemId) {
-        case "ff2mpv":
-            /* These should be mutually exclusive, but,
-               if they aren't, this is a reasonable priority.
-            */
-            url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
-            if (url) ff2mpv(url);
-            break;
+    url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
+    if (url) {
+        browser.cookies.getAll({url: url}).then((cookies) => {
+            ff2mpv(url, cookies);
+        });
     }
 });
 

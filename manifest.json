@@ -37,5 +37,11 @@
         "scripts": ["ff2mpv.js"]
     },
 
-    "permissions": ["nativeMessaging", "contextMenus", "activeTab"]
+    "permissions": [
+        "nativeMessaging",
+        "contextMenus",
+        "activeTab",
+        "cookies",
+        "<all_urls>"
+    ]
 }

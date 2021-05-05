@@ -105,9 +105,12 @@ def get_whitelist():
     try:
         path = get_config_path('whitelist')
     except ValueError:
-        return ['a^'] # impossible regex
-    with open(path, 'r') as io:
-        return [fnmatch.translate(line.rstrip()) for line in io]
+        return [re.compile('a^')] # impossible regex
+    if os.path.isfile(path):
+        with open(path, 'r') as io:
+            return [re.compile(fnmatch.translate(line.rstrip())) for line in io]
+    else:
+        return [re.compile('a^')] # impossible regex
 
 
 def is_whitelisted(url, whitelist):

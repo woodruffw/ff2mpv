@@ -11,12 +11,13 @@ import struct
 import subprocess
 import sys
 import tempfile
+import textwrap
 
 
 def main():
     message = get_message()
 
-    url = message.get('url')
+    url = message.get("url")
     ytdloptions = {}
     additional_mpv_args = []
 
@@ -37,14 +38,18 @@ def main():
         os.environ["PATH"] = f"/usr/local/bin:{path}"
 
     if "cookies" in message and is_whitelisted(url, get_whitelist()):
-        cookies_fname = create_cookiefile(message.get("cookies"));
-        ytdloptions["cookies"] = cookies_fname
-        additional_mpv_args += ['--cookies', '--cookies-file={}'.format(cookies_fname)]
+        with create_cookiefile(message.get("cookies")) as cookie_path:
+            ytdloptions["cookies"] = cookie_path
+            additional_mpv_args += [
+                "--cookies",
+                "--cookies-file={}".format(cookie_path),
+            ]
 
-    mpv_ytdloptions = '--ytdl-raw-options-append={}'.format(
-        ",".join("{}={}".format(k,v) for k,v in ytdloptions.items()))
+    mpv_ytdloptions = "--ytdl-raw-options-append={}".format(
+        ",".join("{}={}".format(k, v) for k, v in ytdloptions.items())
+    )
 
-    args = ['mpv', '--no-terminal', mpv_ytdloptions] + additional_mpv_args + ["--", url]
+    args = ["mpv", "--no-terminal", mpv_ytdloptions] + additional_mpv_args + ["--", url]
 
     subprocess.Popen(args, **kwargs)
 
@@ -55,40 +60,45 @@ def main():
 
 def create_cookiefile(cookies):
     """
-    create a temporary file in netscape cookie format and return its path
+    Create a temporary file in Netscape cookie format and yield its path
     """
-    cookiefile = tempfile.NamedTemporaryFile(mode="w+", delete=False)
-    cookiefile.write("""# Netscape HTTP Cookie File
-# http://curl.haxx.se/rfc/cookie_spec.html
-# This is a generated file!  Do not edit.
+    with tempfile.NamedTemporaryFile() as io:
+        print(
+            textwrap.dedent(
+                """
+                # Netscape HTTP Cookie File
+                # http://curl.haxx.se/rfc/cookie_spec.html
+                # This is a generated file!  Do not edit.
+                """
+            ),
+            file=io,
+        )
 
-""")
-    for cookie in cookies:
-        if "expirationDate" in cookie:
-            expdate = str(cookie.get("expirationDate"))
-        else:
-            expdate = "0"
-        tokens = [cookie.get("domain"),
-                  str(cookie.get("domain").startswith(".")).upper(),
-                  cookie.get("path"), str(cookie.get("secure")).upper(),
-                  expdate, cookie.get("name"),
-                  cookie.get("value")]
-        line = "\t".join(tokens)
-        cookiefile.write(line)
-        cookiefile.write("\n")
-    cookiefile.close()
-    return cookiefile.name
+        for cookie in cookies:
+            tokens = [
+                cookie["domain"],
+                str(cookie["domain"].startswith(".")).upper(),
+                cookie["path"],
+                str(cookie["secure"]).upper(),
+                str(cookie.get("expirationDate", 0)),
+                cookie["name"],
+                cookie["value"],
+            ]
+            line = "\t".join(tokens)
+            print(line, file=io)
+
+        yield io.name
 
 
-def get_config_path(file=''):
+def get_config_path(file=""):
     home = pathlib.Path.home()
-    if home == '':
+    if home == "":
         raise ValueError
-    confighome = os.getenv('XDG_CONFIG_HOME', os.path.join(home, '.config'))
+    confighome = os.getenv("XDG_CONFIG_HOME", os.path.join(home, ".config"))
     if os.path.isdir(confighome):
-        return os.path.join(confighome, 'ff2mpv', file)
+        return os.path.join(confighome, "ff2mpv", file)
     else:
-        return os.path.join(home, '.ff2mpv', file)
+        return os.path.join(home, ".ff2mpv", file)
 
 
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side
@@ -103,14 +113,14 @@ def get_message():
 
 def get_whitelist():
     try:
-        path = get_config_path('whitelist')
+        path = get_config_path("whitelist")
     except ValueError:
-        return [re.compile('a^')] # impossible regex
+        return [re.compile("a^")]  # impossible regex
     if os.path.isfile(path):
-        with open(path, 'r') as io:
+        with open(path, "r") as io:
             return [re.compile(fnmatch.translate(line.rstrip())) for line in io]
     else:
-        return [re.compile('a^')] # impossible regex
+        return [re.compile("a^")]  # impossible regex
 
 
 def is_whitelisted(url, whitelist):

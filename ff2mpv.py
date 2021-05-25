@@ -4,14 +4,13 @@ import fnmatch
 import json
 import os
 import os.path
-import pathlib
 import platform
-import re
 import struct
 import subprocess
 import sys
 import tempfile
 import textwrap
+from pathlib import Path
 
 
 def main():
@@ -37,7 +36,7 @@ def main():
         path = os.environ.get("PATH")
         os.environ["PATH"] = f"/usr/local/bin:{path}"
 
-    if "cookies" in message and is_whitelisted(url, get_whitelist()):
+    if "cookies" in message and cookies_allowed(url):
         with create_cookiefile(message.get("cookies")) as cookie_path:
             ytdloptions["cookies"] = cookie_path
             additional_mpv_args += [
@@ -90,17 +89,6 @@ def create_cookiefile(cookies):
         yield io.name
 
 
-def get_config_path(file=""):
-    home = pathlib.Path.home()
-    if home == "":
-        raise ValueError
-    confighome = os.getenv("XDG_CONFIG_HOME", os.path.join(home, ".config"))
-    if os.path.isdir(confighome):
-        return os.path.join(confighome, "ff2mpv", file)
-    else:
-        return os.path.join(home, ".ff2mpv", file)
-
-
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side
 def get_message():
     raw_length = sys.stdin.buffer.read(4)
@@ -111,20 +99,25 @@ def get_message():
     return json.loads(message)
 
 
-def get_whitelist():
-    try:
-        path = get_config_path("whitelist")
-    except ValueError:
-        return []
-    if os.path.isfile(path):
-        with open(path, "r") as io:
-            return [line.rstrip() for line in io]
+def config_root():
+    config_home = os.getenv("XDG_CONFIG_HOME")
+    if config_home is None:
+        return Path("~/.config/ff2mpv").expanduser()
     else:
+        return Path(config_home) / "ff2mpv"
+
+
+def get_allowlist():
+    allowlist = config_root() / "allowlist"
+    if not allowlist.is_file():
         return []
 
+    with allowlist.open() as io:
+        return [line.rstrip() for line in io]
 
-def is_whitelisted(url, whitelist):
-    return any(fnmatch.fnmatch(url, pattern) for pattern in whitelist)
+
+def cookies_allowed(url):
+    return any(fnmatch.fnmatch(url, pattern) for pattern in get_allowlist())
 
 
 def send_message(message):

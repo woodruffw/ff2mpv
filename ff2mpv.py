@@ -115,16 +115,16 @@ def get_whitelist():
     try:
         path = get_config_path("whitelist")
     except ValueError:
-        return [re.compile("a^")]  # impossible regex
+        return []
     if os.path.isfile(path):
         with open(path, "r") as io:
-            return [re.compile(fnmatch.translate(line.rstrip())) for line in io]
+            return [line.rstrip() for line in io]
     else:
-        return [re.compile("a^")]  # impossible regex
+        return []
 
 
 def is_whitelisted(url, whitelist):
-    return any(pattern.match(url) for pattern in whitelist)
+    return any(fnmatch.fnmatch(url, pattern) for pattern in whitelist)
 
 
 def send_message(message):

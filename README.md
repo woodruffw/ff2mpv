@@ -12,18 +12,22 @@ context button.
 
 ## Cookies
 
-You can enable cookie support for individual sites via a whitelist.
-The whitelist supports regular expressions in order to cover subdomains.
-Please remember to escape dots (`.`) like so: `\.`.
+You can enable cookie support for individual sites via an allowlist.
+The allowlist supports [`fnmatch(3)`](https://www.man7.org/linux/man-pages/man3/fnmatch.3.html)-style
+expressions in order to cover subdomains, one pattern per line.
 
-**Do not use '.*' - it is a big problem for your privacy**
+**Important**: Adding `*` to your allowlist means sending any cookies your browser
+might have saved for the current domain to the requested URL, including
+potentially identifying cookies. You should only enable cookies on the **bare minimum**
+number of sites required for functionality.
 
 Examples:
+
 ```
-.*\.youtube\.com/.*
-.*\.youtube\.com/playlist.*
-.*\.fau\..*/.*
+*.youtube.com*
+*.youtube.com/playlist*
 ```
+
 The `/playlist` one sends cookies only if the link is a playlist.
 This is useful if you want to play private playlists but don't want to send cookies for normal videos.
 

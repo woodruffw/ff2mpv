@@ -2,12 +2,51 @@
 # frozen_string_literal: true
 
 require "json"
+require "pathname"
+require "tempfile"
+
+def config_home
+  config_home = ENV["XDG_CONFIG_HOME"]
+  if config_home.nil?
+    Path.new("~/.config/ff2mpv").expand_path
+  else
+    Path.new(config_home) / "ff2mpv"
+  end
+end
+
+def allowlist
+  allowlist = config_home / "allowlist"
+  return [] unless allowlist.file?
+
+  allowlist.readlines.map(&:rstrip!)
+end
+
+def cookies_allowed?(url)
+  allowlist.any? { |pat| File.fnmatch?(pat, url) }
+end
+
+def cookiefile(cookies)
+  cookiefile = Tempfile.new "cookiefile"
+
+  cookies.each do |c|
+    cookiefile.puts [c["domain"], c["domain"].starts_with?(".").to_s.upcase!, c["path"],
+                     c["secure"].to_s.upcase!, c.fetch("expirationDate", 0).to_s, c["name"],
+                     c["value"]].join("\t")
+  end
+
+  cookiefile.path
+end
 
 len = $stdin.read(4).unpack1("L")
 data = JSON.parse($stdin.read(len))
 url = data["url"]
 
 args = %w[--no-terminal]
+
+if data.key? "cookies"
+  cookies = cookiefile data["cookies"]
+  args.concat %W[--cookies --cookiefile=#{cookies} --ytdl-raw-options-append=cookies=#{cookies}]
+end
 
 # HACK(ww): On macOS, graphical applications inherit their path from `launchd`
 # rather than the default path list in `/etc/paths`. `launchd` doesn't include

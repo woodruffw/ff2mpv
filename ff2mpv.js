@@ -11,7 +11,7 @@ function ff2mpv(url) {
 
 browser.contextMenus.create({
     id: "ff2mpv",
-    title: "Play in MPV",
+    title: "Play in MPV"  + ( !!browser.contextMenus.getTargetElement ? " (&W)" : "" ),
     contexts: ["link", "image", "video", "audio", "selection", "frame"]
 });
 

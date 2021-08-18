@@ -2,11 +2,11 @@ function onError(error) {
     console.log(`${error}`);
 }
 
-function ff2mpv(url) {
-    browser.tabs.executeScript({
-        code: "video = document.getElementsByTagName('video');video[0].pause();"
-    });
-    browser.runtime.sendNativeMessage("ff2mpv", { url: url }).catch(onError);
+async function ff2mpv(url) {
+    let time = await browser.tabs.executeScript({
+        code: "video = document.getElementsByTagName('video');video[0].pause();video[0].currentTime"
+    }) || 0;
+    browser.runtime.sendNativeMessage("ff2mpv", { url, time }).catch(onError);
 }
 
 browser.contextMenus.create({

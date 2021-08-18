@@ -11,8 +11,9 @@ import subprocess
 def main():
     message = get_message()
     url = message.get("url")
+    time = message.get("time") or 0
 
-    args = ["mpv", "--no-terminal", "--", url]
+    args = ["mpv", "--no-terminal", f"--start={time}", "--", url]
 
     kwargs = {}
     # https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Closing_the_native_app

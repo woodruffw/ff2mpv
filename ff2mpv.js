@@ -2,11 +2,17 @@ function onError(error) {
     console.log(`${error}`);
 }
 
-async function ff2mpv(url) {
-    let time = await browser.tabs.executeScript({
-        code: "video = document.getElementsByTagName('video');video[0].pause();video[0].currentTime"
-    }) || 0;
-    browser.runtime.sendNativeMessage("ff2mpv", { url, time }).catch(onError);
+async function ff2mpv(url, direct) {
+    let time;
+    if (direct) {
+        time = await browser.tabs.executeScript({
+            code: "video = document.getElementsByTagName('video');video[0].pause();video[0].currentTime"
+        });
+    } else {
+        // Try to find time in a url parameter
+        time = parseInt(url.match(/(?<=\W(t|time)=)\d+/)?.[0], 10)
+    }
+    browser.runtime.sendNativeMessage("ff2mpv", time ? { url, time } : { url }).catch(onError);
 }
 
 browser.contextMenus.create({
@@ -22,11 +28,11 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
                if they aren't, this is a reasonable priority.
             */
             url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
-            if (url) ff2mpv(url);
+            if (url) ff2mpv(url, false);
             break;
     }
 });
 
 browser.browserAction.onClicked.addListener((tab) => {
-    ff2mpv(tab.url);
+    ff2mpv(tab.url, true);
 });

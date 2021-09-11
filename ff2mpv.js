@@ -8,9 +8,6 @@ async function ff2mpv(url, direct) {
         time = await browser.tabs.executeScript({
             code: "video = document.getElementsByTagName('video');video[0].pause();video[0].currentTime"
         });
-    } else {
-        // Try to find time in a url parameter
-        time = parseInt(url.match(/(?<=\W(t|time)=)\d+/)?.[0], 10)
     }
     browser.runtime.sendNativeMessage("ff2mpv", time ? { url, time } : { url }).catch(onError);
 }

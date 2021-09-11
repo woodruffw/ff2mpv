@@ -13,7 +13,11 @@ def main():
     url = message.get("url")
     time = message.get("time")
 
-    args = ["mpv", "--no-terminal", f"--start={time}", "--", url] if time else ["mpv", "--no-terminal", "--", url]
+    extra_args = []
+    if time is not None:
+        extra_args.append(f"--start={time}")
+
+    args = ["mpv", "--no-terminal", *extra_args, "--", url]
 
     kwargs = {}
     # https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Closing_the_native_app

@@ -17,14 +17,14 @@
         "default_title": "Play the current URL in MPV"
     },
 
-	"commands": {
-		"_execute_browser_action": {
-			"suggested_key": {
-				"default": "Ctrl+Shift+V"
-			},
-			"description": "Play the current URL in mpv"
-		}
-	},
+    "commands": {
+        "_execute_browser_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+V"
+            },
+            "description": "Play the current URL in mpv"
+        }
+    },
 
     "applications": {
         "gecko": {

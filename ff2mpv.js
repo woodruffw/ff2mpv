@@ -9,6 +9,9 @@ function ff2mpv(url) {
     browser.runtime.sendNativeMessage("ff2mpv", { url: url }).catch(onError);
 }
 
+// define the platform variable to check the platform Info
+var platform = browser.runtime.getPlatformInfo();
+
 // Make check on platform
 platform.then(function(i) {
   var os = i.os;

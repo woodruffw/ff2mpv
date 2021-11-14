@@ -55,5 +55,5 @@ jobs:
       - name: eslint
         run: |
           sudo npm install eslint --global
-          eslint --no-eslintrc --parser-options=ecmaVersion:6 ff2mpv.js
+          eslint --no-eslintrc --parser-options=ecmaVersion:8 ff2mpv.js
 

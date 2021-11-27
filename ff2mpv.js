@@ -14,11 +14,11 @@ async function getOS() {
 }
 
 getOS().then((os) => {
-  var contextMenu = os == "win" ? "&V" : "(&W)";
+  var title = os == "win" ? "Play in MP&V" : "Play in MPV (&W)";
 
   browser.contextMenus.create({
       id: "ff2mpv",
-      title: "Play in MPV " + ( !!browser.contextMenus.getTargetElement ? contextMenu : "" ),
+      title: title,
       contexts: ["link", "image", "video", "audio", "selection", "frame"]
   });
 

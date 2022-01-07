@@ -9,20 +9,19 @@ function ff2mpv(url) {
     browser.runtime.sendNativeMessage("ff2mpv", { url: url }).catch(onError);
 }
 
-// define the platform variable to check the platform Info
-var platform = browser.runtime.getPlatformInfo();
+async function getOS() {
+  return browser.runtime.getPlatformInfo().then((i) => i.os);
+}
 
-// Make check on platform
-platform.then(function(i) {
-  var os = i.os;
-  // if it's windows then use mnemonics V, if not use W as default
-  var contextMenu = os == "win" ? "&V" : "V (&W)";
+getOS().then((os) => {
+  var title = os == "win" ? "Play in MP&V" : "Play in MPV (&W)";
+
   browser.contextMenus.create({
       id: "ff2mpv",
-      title: "Play in MP"  + ( !!browser.contextMenus.getTargetElement ? contextMenu : "" ),
+      title: title,
       contexts: ["link", "image", "video", "audio", "selection", "frame"]
   });
-  
+
   browser.contextMenus.onClicked.addListener((info, tab) => {
       switch (info.menuItemId) {
           case "ff2mpv":
@@ -34,7 +33,7 @@ platform.then(function(i) {
               break;
       }
   });
-  
+
   browser.browserAction.onClicked.addListener((tab) => {
       ff2mpv(tab.url);
   });

@@ -12,7 +12,7 @@ def main():
     message = get_message()
     url = message.get("url")
 
-    args = ["mpv", "--no-terminal", "--", url]
+    args = ["mpv", "--", url] # need to remove terminal because it need to capture the output of yt-dlp
 
     kwargs = {}
     # https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#Closing_the_native_app
@@ -30,11 +30,14 @@ def main():
         path = os.environ.get("PATH")
         os.environ["PATH"] = f"/usr/local/bin:{path}"
 
-    subprocess.Popen(args, **kwargs)
-
+    process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE,**kwargs)
+    pOut, pErr = process.communicate() # @see https://docs.python.org/3/library/subprocess.html#subprocess.Popen.communicate
     # Need to respond something to avoid "Error: An unexpected error occurred"
     # in Browser Console.
-    send_message("ok")
+    if "ERROR" not in str(pOut) :    
+        send_message("ok")
+    else :
+        send_message(pOut.decode("utf-8"))
 
 
 # https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side

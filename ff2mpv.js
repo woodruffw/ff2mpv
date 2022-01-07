@@ -1,12 +1,26 @@
 function onError(error) {
     console.log(`${error}`);
+    // Response to user tried to open when json file and config isn't there
+    var msg = "alert(`Seems integration is failed : "+error+"`)";
+    browser.tabs.executeScript({
+        code: msg
+    }); 
 }
 
 function ff2mpv(url) {
     browser.tabs.executeScript({
         code: "video = document.getElementsByTagName('video');video[0].pause();"
     });
-    browser.runtime.sendNativeMessage("ff2mpv", { url: url }).catch(onError);
+    browser.runtime.sendNativeMessage("ff2mpv", { url: url }, function(r) {
+        console.log(r);
+        if (r != "ok") {
+            // If failed, print terminal failure message
+            var msg = "alert(`"+r+"`)";
+            browser.tabs.executeScript({
+                code: msg
+            }); 
+        }
+    }).catch(onError);
 }
 
 async function getOS() {

@@ -2,7 +2,7 @@
     "description": "Tries to play links in MPV",
     "manifest_version": 2,
     "name": "ff2mpv",
-    "version": "3.8.0",
+    "version": "3.9.1",
 
     "icons": {
         "16": "icons/icon_16x16.png",

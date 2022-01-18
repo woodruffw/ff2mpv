@@ -4,6 +4,6 @@
     "path": "/home/william/scripts/ff2mpv",
     "type": "stdio",
     "allowed_origins": [
-        "chrome-extension://<your-extension-id>/"
+        "chrome-extension://ephjcajbkgplkjmelpglennepbpmdpjg/"
     ]
 }

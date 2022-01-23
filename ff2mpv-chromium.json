@@ -1,0 +1,9 @@
+{
+    "name": "ff2mpv",
+    "description": "ff2mpv's external manifest",
+    "path": "/home/william/scripts/ff2mpv",
+    "type": "stdio",
+    "allowed_origins": [
+        "chrome-extension://ephjcajbkgplkjmelpglennepbpmdpjg/"
+    ]
+}

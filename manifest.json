@@ -34,7 +34,10 @@
     },
 
     "background": {
-        "scripts": ["ff2mpv.js"]
+        "scripts": [
+            "browser-polyfill.js",
+            "ff2mpv.js"
+        ]
     },
 
     "permissions": ["nativeMessaging", "contextMenus", "activeTab"]

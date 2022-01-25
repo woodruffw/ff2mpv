@@ -4,38 +4,60 @@
 if [[ -n $1 ]]; then
   browser=$1
 else
-  # Defaults to chromium
-  browser=chromium
+  # does not default to chromium; users need to specify the browser
+  :
 fi
 
-case $browser in
+select_browser() {
+  trap 'echo; exit 1' INT
+  case $browser in
+  # https://developer.chrome.com/docs/apps/nativeMessaging/#native-messaging-host-location
   chromium)
-    linux_chromium_path=".config/chromium"
-    mac_chromium_path="Library/Application Support/Chromium"
+    linux_chromium_path="$HOME/.config/chromium"
+    mac_chromium_path="$HOME/Library/Application Support/Chromium"
     ;;
   chrome)
-    linux_chromium_path=".config/google-chrome"
-    mac_chromium_path="Library/Application Support/Google/Chrome"
+    linux_chromium_path="$HOME/.config/google-chrome"
+    mac_chromium_path="$HOME/Library/Application Support/Google/Chrome"
+    ;;
+  brave)
+    linux_chromium_path="$HOME/.config/BraveSoftware/Brave-Browser"
+    mac_chromium_path="$HOME/Library/Application Support/BraveSoftware/Brave-Browser"
+    ;;
+  edge)
+    # https://docs.microsoft.com/en-us/microsoft-edge/extensions-chromium/developer-guide/native-messaging#step-3---copy-the-native-messaging-host-manifest-file-to-your-system
+    linux_chromium_path="$HOME/.config/microsoft-edge"
+    mac_chromium_path="$HOME/Library/Application Support/Microsoft Edge"
+    ;;
+  custom)
+    linux_chromium_path="$2"
+    mac_chromium_path="$2"
     ;;
   *)
-    >&2 echo "Invalid option. Valid options: \"chrome\" and \"chromium\""
-    exit 1
-esac
+    echo >&2 "Invalid option. Please select a valid browser: \"chrome\" \"chromium\" \"brave\""
+    printf "browser: " && read -r browser
+    select_browser "$@"
+    ;;
+  esac
+}
+
+select_browser "$@"
 
 # Some environment path variables
-CURRENT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+CURRENT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 case "$(uname)" in
-    Linux*)
-        CHR_DEST="$HOME/$linux_chromium_path"
-        JSON_DEST="$CHR_DEST/NativeMessagingHosts"
-        ;;
-    Darwin*)
-        CHR_DEST="$HOME/$mac_chromium_path"
-        JSON_DEST="$CHR_DEST/NativeMessagingHosts"
-        ;;
-    *)
-    echo "Unsupported OS, please follow the manual instructions in the wiki"
-    exit 1
+Linux*)
+  CHR_DEST="$linux_chromium_path"
+  JSON_DEST="$CHR_DEST/NativeMessagingHosts"
+  ;;
+Darwin*)
+  CHR_DEST="$mac_chromium_path"
+  JSON_DEST="$CHR_DEST/NativeMessagingHosts"
+  ;;
+*)
+  echo "Unsupported OS, please follow the manual instructions in the wiki"
+  exit 1
+  ;;
 esac
 OLD_PATH="/home/william/scripts/ff2mpv"
 
@@ -43,7 +65,7 @@ OLD_PATH="/home/william/scripts/ff2mpv"
 if [[ -d "$CHR_DEST" ]]; then
   mkdir -p "$JSON_DEST"
   # Replace the placeholder path in the JSON file and install it
-  sed -e "s|$OLD_PATH|$CURRENT_DIR/ff2mpv.py|g" ff2mpv-chromium.json > "$JSON_DEST"/ff2mpv.json
+  sed -e "s|$OLD_PATH|$CURRENT_DIR/ff2mpv.py|g" ff2mpv-chromium.json >"$JSON_DEST"/ff2mpv.json
 else
   echo "Please start your browser at least once to generate the required directories"
   exit 1

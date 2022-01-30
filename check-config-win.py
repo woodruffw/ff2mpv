@@ -38,7 +38,7 @@ group.add_argument(
 args = parser.parse_args()
 
 WDIR = os.path.dirname(__file__)
-FF2MPV_JSON = fr"{WDIR}\ff2mpv-windows.json"
+FF2MPV_JSON = rf"{WDIR}\ff2mpv-windows.json"
 FF2MPV_KEY = r"Software\Mozilla\NativeMessagingHosts\ff2mpv"
 # Assuming current user overrides local machine.
 HKEYS = {
@@ -50,7 +50,7 @@ found_key = False
 print("- Checking Registry:")
 for key_name, reg_key in HKEYS.items():
     try:
-        print(fr"{key_name}\{FF2MPV_KEY} ... ", end="")
+        print(rf"{key_name}\{FF2MPV_KEY} ... ", end="")
         key_open = winreg.OpenKey(reg_key, FF2MPV_KEY)
         hkey_found = reg_key
         print("Found.")

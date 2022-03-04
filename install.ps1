@@ -75,12 +75,21 @@ function select_browser () {
         $script:json_path = "$script:json_path\ff2mpv-windows-$($script:hkcu_dest.split("\")[-1]).json"
       }
     }
+    "help" {
+      help
+      exit 0
+    }
+    "exit" {
+      exit 0
+    }
     default {
       Write-Output ""
       Write-Output "Invalid option. Please select a valid browser:"
       Write-Output "`"chrome`", `"firefox`", `"chromium`", `"edge`"`, or"
       Write-Output "`"custom`" and provide the path in the registry as a second argument"
       Write-Output "E.g. > `"custom`" `"Registry::HKEY_CURRENT_USER\SOFTWARE\Google\Chrome`" For Chrome"
+      Write-Output ""
+      Write-Output "Enter `"help`" to display more information or `"exit`" to quit."
       Write-Output ""
       $new_input = Read-Host -Prompt "> "
       $script:browser = $new_input.split()[0]
@@ -165,7 +174,7 @@ function install () {
   # Show warning if mpv cannot be found in path
   if (-not (testCommand mpv)) {
     Write-Output ""
-    Write-Output "WARNING: mpv was not found!!!"
+    Write-Output "**** WARNING: mpv was not found!!! ****"
     Write-Output "Make sure it is installed and in your path to use the extension!!!"
   }
 

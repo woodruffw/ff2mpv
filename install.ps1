@@ -155,9 +155,8 @@ function install () {
   }
 
   # Batch script update
-  $bat = "@echo off
-  call $python ff2mpv.py"
-  $bat > "./ff2mpv.bat"
+  $bat = "@echo off`ncall $python ff2mpv.py"
+  [System.IO.File]::WriteAllLines("ff2mpv.bat", $bat)
 
   # JSON manipulation if using chromium based browser
   if ($browser -ne "firefox") {

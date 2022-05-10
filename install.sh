@@ -39,12 +39,35 @@ select_browser() {
     LINUX_NMH_DIR="native-messaging-hosts"
     JSON_FILE="ff2mpv.json"
     ;;
-  custom)
-    linux_path="$2"
-    mac_path="$2"
+  custom-chromium)
+    if (($# == 2)); then
+      linux_path="$2" mac_path="$2"
+    else
+      printf "path: " && read -r linux_path
+      mac_path="$linux_path"
+    fi
+    ;;
+  custom-firefox)
+    if (($# == 2)); then
+      linux_path="$2" mac_path="$2"
+    else
+      printf "path: " && read -r linux_path
+      mac_path="$linux_path"
+    fi
+    LINUX_NMH_DIR="native-messaging-hosts"
+    JSON_FILE="ff2mpv.json"
     ;;
   *)
-    echo >&2 "Invalid option. Please select a valid browser: \"chrome\" \"chromium\" \"brave\""
+    echo >&2 '
+Invalid option. Please select a valid browser:
+- "chrome"
+- "chromium"
+- "brave"
+- "edge"
+- "firefox"
+- "custom-chromium"
+- "custom-firefox"
+'
     printf "browser: " && read -r browser
     select_browser "$@"
     ;;

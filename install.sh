@@ -83,6 +83,10 @@ Linux*)
   BROWSER_DEST="$linux_path"
   JSON_DEST="$BROWSER_DEST/$LINUX_NMH_DIR"
   ;;
+FreeBSD*)
+  BROWSER_DEST="$linux_path"
+  JSON_DEST="$BROWSER_DEST/$LINUX_NMH_DIR"
+  ;;
 Darwin*)
   BROWSER_DEST="$mac_path"
   JSON_DEST="$BROWSER_DEST/NativeMessagingHosts"

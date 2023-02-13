@@ -26,6 +26,7 @@ macOS: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-macOS
 
 Windows: https://github.com/woodruffw/ff2mpv/wiki/Installation-on-Windows
 
+[A Rust version of the native client is also available](https://github.com/ryze312/ff2mpv-rust).
 [A Go version of the native client is also available](https://git.clsr.net/util/ff2mpv-go/).
 
 ## License

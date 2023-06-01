@@ -2,8 +2,8 @@ ff2mpv
 ======
 
 ![license](https://raster.shields.io/badge/license-MIT%20with%20restrictions-green.png)
-![Mozilla Add-on](https://img.shields.io/amo/v/ff2mpv@yossarian.net)
-![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ephjcajbkgplkjmelpglennepbpmdpjg)
+[![Mozilla Add-on](https://img.shields.io/amo/v/ff2mpv@yossarian.net)](https://addons.mozilla.org/en-US/firefox/addon/ff2mpv/)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ephjcajbkgplkjmelpglennepbpmdpjg)](https://chrome.google.com/webstore/detail/ff2mpv/ephjcajbkgplkjmelpglennepbpmdpjg)
 
 This is a browser extension for playing URLs in MPV. It works on Firefox, Chrome and other Firefox or Chromium-based browsers.
 

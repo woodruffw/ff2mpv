@@ -3,6 +3,9 @@
 # Select browser
 if [[ -n $1 ]]; then
   browser=$1
+elif [[ -n "${BROWSER}" ]]; then
+  browser=$(basename "${BROWSER}")
+  echo "Using browser ${browser} from environment variable"
 else
   # does not default; users need to specify the browser
   :

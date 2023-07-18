@@ -1,7 +1,63 @@
 
+<#
+.SYNOPSIS
+  Install script for ff2mpv extension for Windows (10/11).
+
+.DESCRIPTION
+  The install script will setup few things to make the backend work
+  for the ff2mpv extension.
+  - Add registry entry for browser.
+  - Add a json manifest for the extension.
+  - Update ff2mpv.bat with valid python command.
+  - Show informative messages (like missing mpv in path).
+
+.LINK
+https://github.com/woodruffw/ff2mpv
+
+.LINK
+https://github.com/woodruffw/ff2mpv/wiki/Installation-on-Windows
+
+.PARAMETER Uninstall
+  Use to remove the registry key for ff2mpv
+
+.PARAMETER Help
+  Prints the help message
+
+.INPUTS
+  - Name of the browser to install ff2mpv entry in registry.
+  - Registry path for NativeMessagingHosts (custom browser install only).
+
+.OUTPUTS
+  - Logs of script processing
+  - Entry in registry for ff2mpv
+  - Json file for NativeMessagingHosts
+  - Batch script ff2mpv.bat
+
+.EXAMPLE
+  ./install.ps1 librewolf
+
+.EXAMPLE
+  ./install.ps1 custom-firefox "Registry::HKEY_CURRENT_USER\SOFTWARE\Mozilla"
+
+.EXAMPLE
+  ./install.ps1 chromium -uninstall
+
+.EXAMPLE
+  ./install.ps1 custom-chromium "Registry::HKEY_CURRENT_USER\SOFTWARE\Google\Chrome" -uninstall
+
+.EXAMPLE
+  ./install.ps1 -help
+
+.EXAMPLE
+  ./install.ps1
+
+.NOTES
+  Some browsers like librewolf or brave use other browser's registry entries.
+#>
+
 param (
-  [Switch] $uninstall = $false,
-  [Switch] $help = $false
+  [Switch] $Uninstall = $false,
+  [Switch] $Help = $false
 )
 
 $browser = $args[0]

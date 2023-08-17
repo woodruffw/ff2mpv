@@ -1,7 +1,63 @@
 
+<#
+.SYNOPSIS
+  Install script for ff2mpv extension for Windows (10/11).
+
+.DESCRIPTION
+  The install script will setup few things to make the backend work
+  for the ff2mpv extension.
+  - Add registry entry for browser.
+  - Add a json manifest for the extension.
+  - Update ff2mpv.bat with valid python command.
+  - Show informative messages (like missing mpv in path).
+
+.LINK
+https://github.com/woodruffw/ff2mpv
+
+.LINK
+https://github.com/woodruffw/ff2mpv/wiki/Installation-on-Windows
+
+.PARAMETER Uninstall
+  Use to remove the registry key for ff2mpv
+
+.PARAMETER Help
+  Prints the help message
+
+.INPUTS
+  - Name of the browser to install ff2mpv entry in registry.
+  - Registry path for NativeMessagingHosts (custom browser install only).
+
+.OUTPUTS
+  - Logs of script processing
+  - Entry in registry for ff2mpv
+  - Json file for NativeMessagingHosts
+  - Batch script ff2mpv.bat
+
+.EXAMPLE
+  ./install.ps1 librewolf
+
+.EXAMPLE
+  ./install.ps1 custom-firefox "Registry::HKEY_CURRENT_USER\SOFTWARE\Mozilla"
+
+.EXAMPLE
+  ./install.ps1 chromium -uninstall
+
+.EXAMPLE
+  ./install.ps1 custom-chromium "Registry::HKEY_CURRENT_USER\SOFTWARE\Google\Chrome" -uninstall
+
+.EXAMPLE
+  ./install.ps1 -help
+
+.EXAMPLE
+  ./install.ps1
+
+.NOTES
+  Some browsers like librewolf or brave use other browser's registry entries.
+#>
+
 param (
-  [Switch] $uninstall = $false,
-  [Switch] $help = $false
+  [Switch] $Uninstall = $false,
+  [Switch] $Help = $false
 )
 
 $browser = $args[0]
@@ -24,6 +80,7 @@ $supported_browsers = @(
   'chromium',
   'chrome',
   'edge',
+  'brave',
   'custom-chromium',
   'custom-firefox'
 )
@@ -46,8 +103,8 @@ function help {
 
     Arguments:
 
-    browser:          The name of the browser to install
-                      Valid options: firefox, chrome, chromium, edge, custom
+    browser:          The name of the browser to install:
+                       - $($supported_browsers -join "`n                       - ")
 
     registry_path:    The path in the registry for the NativeMessagingHost directory
                       Only needed if browser is `"custom-chromium`" or `"custom-firefox`"
@@ -58,6 +115,24 @@ function help {
     -uninstall        Uninstall the registry key value for the given browser
 
     -help             Show this message
+
+
+    Usage:
+
+    Install a supported browser (E.g. chromium):
+    > .\install.ps1 chromium
+
+    Install a custom browser (E.g. google chrome):
+    > .\install.ps1 custom-chromium `"Registry::HKEY_CURRENT_USER\SOFTWARE\Google\Chrome`"
+
+    Uninstall a supported browser (E.g. librewolf):
+    > .\install.ps1 librewolf -uninstall
+
+    Uninstall a custom browser (E.g. firefox):
+    > .\install.ps1 custom-firefox `"Registry::HKEY_CURRENT_USER\SOFTWARE\Mozilla`" -uninstall
+
+    Print help
+    > .\install.ps1 -help
     "
 }
 
@@ -81,6 +156,11 @@ function select_browser () {
     }
     "^edge$" {
       $script:hkcu_dest = "Registry::HKEY_CURRENT_USER\SOFTWARE\Microsoft\Edge"
+      $script:json_path = "$script:json_path\ff2mpv-windows-chrome.json"
+      break
+    }
+    "^brave$" {
+      $script:hkcu_dest = "Registry::HKEY_CURRENT_USER\SOFTWARE\Google\Chrome"
       $script:json_path = "$script:json_path\ff2mpv-windows-chrome.json"
       break
     }
@@ -124,10 +204,14 @@ function select_browser () {
     default {
       Write-Output ""
       Write-Output "Invalid option. Please select a valid browser:"
-      $supported_browsers | % { Write-Output $_ }
+      $supported_browsers | % { Write-Output "> $_" }
+      Write-Output ""
+      Write-Output "E.g. To install for chromium:"
+      Write-Output "> : `"chromium`""
       Write-Output ""
       Write-Output "For custom options provide the path in the registry as a second argument"
-      Write-Output "E.g. > `"custom-chromium`" `"Registry::HKEY_CURRENT_USER\SOFTWARE\Google\Chrome`" for Chrome"
+      Write-Output "E.g. If you want to custom install Google Chrome you can do:"
+      Write-Output "> : `"custom-chromium`" `"Registry::HKEY_CURRENT_USER\SOFTWARE\Google\Chrome`""
       Write-Output ""
       Write-Output "Enter `"help`" to display more information or `"exit`" to quit."
 
@@ -147,14 +231,23 @@ function install () {
   $registry_dest = "$hkcu_dest\NativeMessagingHosts"
   $ff2mpv = "$registry_dest\ff2mpv"
 
-  # LibreWolf has its own entry in registry: HKEY_CURRENT_USER\Software\LibreWolf.
-  # However it reads the entries for Mozilla as Firefox does and ignores the ones in LibreWolf.
-  # Check if Mozilla entry exist or add it if not.
-  if (($browser -eq 'librewolf') -and -not (Test-Path "$hkcu_dest")) {
+  # Check if registry entry location for browser exists
+  # The browser itself should create its own entry in registry but
+  # some browsers default to search in the entries of some more popular browsers
+  if (
+    (($browser -eq 'librewolf') -or ($browser -eq 'brave')) -and -not (Test-Path "$hkcu_dest")
+  ) {
+    # LibreWolf: HKEY_CURRENT_USER\Software\LibreWolf.
+    # But reads the entries for Mozilla Firefox and ignores the entries for LibreWolf.
+    #
+    # Brave: HKEY_CURRENT_USER\Software\BraveSoftware\Brave-Browser
+    # But reads the entried for Google Chrome and ignores the entries for brave.
     Write-Output ""
     Write-Output "Creating `"$hkcu_dest`""
-    Write-Output "entry in registry for librewolf"
-    New-Item -Path "$hkcu_dest"
+    Write-Output "entry in registry for $browser"
+    # WARNING: The -Force will override the registry entry if exists.
+    # Checking if the path exists (Test-Path) is very important to prevent that.
+    New-Item -Path "$hkcu_dest" -Force
   }
 
   # Test if the browser path entry exist 

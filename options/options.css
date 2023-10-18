@@ -1,0 +1,154 @@
+:root {
+  --light-theme-profile-odd: hsl(0, 0%, 86%);
+  --light-theme-profile-border: hsl(0, 0%, 0%);
+  --light-theme-color: hsl(0, 0%, 0%);
+  --light-theme-background: hsl(0, 0%, 100%);
+  --light-theme-background-input: hsl(0, 0%, 100%);
+  --light-theme-normal-button: hsl(300, 67%, 42%);
+  --light-theme-delete-button: hsl(0, 100%, 50%);
+  --light-theme-button-color: hsl(0, 0%, 100%);
+
+  --dark-theme-profile-odd: hsl(255, 6%, 8%);
+  --dark-theme-profile-border: hsl(0, 0%, 56%);
+  --dark-theme-color: hsl(0, 0%, 89%);
+  --dark-theme-background: hsl(255, 6%, 13%);
+  --dark-theme-background-input: hsl(255, 6%, 28%);
+  --dark-theme-normal-button: hsl(300, 67%, 22%);
+  --dark-theme-delete-button: hsl(0, 100%, 30%);
+  --dark-theme-button-color: hsl(0, 0%, 89%);
+}
+
+body {
+  min-width: 600px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--light-theme-color);
+  background-color: var(--light-theme-background);
+}
+
+#profiles-wrapper {
+  width: 100%;
+}
+
+.profile:nth-child(2n + 1) {
+  background-color: var(--light-theme-profile-odd);
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+  border: 2px solid var(--light-theme-profile-border);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.profile textarea, .profile input {
+  color: var(--light-theme-color);
+  background-color: var(--light-theme-background-input);
+}
+
+.profile textarea:focus-visible, .profile input:focus-visible {
+  outline: dotted;
+  outline-color: var(--light-theme-profile-border);
+}
+
+.profile textarea {
+  height: 120px;
+}
+
+.profile + .profile {
+  margin-top: 10px;
+}
+
+.new-profile {
+  border-color: var(--light-theme-normal-button);
+}
+
+.button {
+  border-radius: 5px;
+  color: var(--light-theme-button-color);
+  background-color: var(--light-theme-normal-button);
+}
+
+.button:focus-visible {
+  outline: dotted;
+  outline-color: var(--light-theme-profile-border);
+}
+
+.button:hover {
+  background-color: var(--dark-theme-normal-button);
+}
+
+.delete-button {
+  background-color: var(--light-theme-delete-button);
+}
+
+.delete-button:hover {
+  background-color: var(--dark-theme-delete-button);
+}
+
+.buttons-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+#add {
+  margin-top: 20px;
+  width: 80%;
+  height: 2rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    color: var(--dark-theme-color);
+    background-color: var(--dark-theme-background);
+  }
+
+  .profile:nth-child(2n + 1) {
+    background-color: var(--dark-theme-profile-odd);
+  }
+
+  .profile {
+    border-color: var(--dark-theme-profile-border);
+  }
+
+  .profile textarea, .profile input {
+    color: var(--dark-theme-color);
+    background-color: var(--dark-theme-background-input);
+  }
+
+  .profile textarea:focus-visible, .profile input:focus-visible {
+    outline-color: var(--dark-theme-profile-border);
+  }
+
+  .new-profile {
+    border-color: var(--dark-theme-normal-button);
+  }
+
+  .button {
+    color: var(--dark-theme-button-color);
+    background-color: var(--dark-theme-normal-button);
+  }
+
+  .button:focus-visible {
+    outline-color: var(--dark-theme-profile-border);
+  }
+
+  .button:hover {
+    background-color: var(--light-theme-normal-button);
+  }
+
+  .delete-button {
+    background-color: var(--dark-theme-delete-button);
+  }
+
+  .delete-button:hover {
+    background-color: var(--light-theme-delete-button);
+  }
+}

@@ -62,7 +62,7 @@
     }
 
     const id = targetProfile.dataset.id || uuid();
-    const profile = { id, name, content};
+    const profile = { id, name, content };
 
     backgroundPage[profileFunction](profile);
 

@@ -5,7 +5,6 @@ function onError(error) {
 }
 
 function ff2mpv(url, options = []) {
-  console.log(url, options);
   browser.tabs.executeScript({
     code: "video = document.getElementsByTagName('video');video[0].pause();"
   });
@@ -85,7 +84,6 @@ getOS().then(async (os) => {
   });
 
   browser.browserAction.onClicked.addListener((tab) => {
-    console.log('Browser action');
     ff2mpv(tab.url);
   });
 });

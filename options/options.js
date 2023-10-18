@@ -78,9 +78,11 @@
     buttonsWrapper.children[1].removeEventListener('click', onDeleteProfile);
     profilesWrapper.removeChild(targetProfile);
 
-    const backgroundPage = browser.extension.getBackgroundPage();
+    if (id) {
+      const backgroundPage = browser.extension.getBackgroundPage();
 
-    backgroundPage.deleteProfile(id);
+      backgroundPage.deleteProfile(id);
+    }
 
     return deleteProfile(id);
   };

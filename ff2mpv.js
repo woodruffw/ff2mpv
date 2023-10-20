@@ -8,9 +8,7 @@ function ff2mpv(url, options = []) {
   browser.tabs.executeScript({
     code: "video = document.getElementsByTagName('video');video[0].pause();"
   });
-  browser.runtime.sendNativeMessage("ff2mpv", { url,
-    options: options.filter(o => !!o),
-  }).catch(onError);
+  browser.runtime.sendNativeMessage("ff2mpv", { url, options }).catch(onError);
 }
 
 async function getOS() {
@@ -21,17 +19,28 @@ async function getProfiles() {
   return (await browser.storage.sync.get('profiles'))['profiles'] || [];
 };
 
-function submenuClicked(content) {
-  return (info) => {
-    switch (info.parentMenuItemId) {
-      case "ff2mpv":
-        /* These should be mutually exclusive, but,
-           if they aren't, this is a reasonable priority.
-        */
-        url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
-        if (url) ff2mpv(url, content);
-      break;
-    }
+async function getOptions(id) {
+  const profiles = await getProfiles();
+  const profile = profiles.find(pf => pf.id === id);
+
+  // If profile, remove empty lines
+  return profile
+    ? profile.content.filter(line => !!line)
+    : [];
+}
+
+async function submenuClicked(info) {
+  switch (info.parentMenuItemId) {
+    case "ff2mpv":
+      /* These should be mutually exclusive, but,
+         if they aren't, this is a reasonable priority.
+      */
+      url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
+      if (url) {
+        const options = await getOptions(info.menuItemId);
+        ff2mpv(url, options);
+      }
+    break;
   }
 }
 
@@ -41,7 +50,7 @@ function createProfile(profile) {
     id: profile.id,
     title: profile.name,
     contexts,
-    onclick: submenuClicked(profile.content),
+    onclick: submenuClicked,
   })
 }
 
@@ -52,7 +61,6 @@ function deleteProfile(menuItemId) {
 function updateProfile(profile) {
   browser.contextMenus.update(profile.id, {
     title: profile.name,
-    onclick: submenuClicked(profile.content),
   });
 }
 
@@ -70,7 +78,7 @@ getOS().then(async (os) => {
     parentId: "ff2mpv",
     title,
     contexts,
-    onclick: submenuClicked(),
+    onclick: submenuClicked,
   });
 
   const profiles = await getProfiles();
@@ -81,7 +89,7 @@ getOS().then(async (os) => {
       id: profile.id,
       title: profile.name,
       contexts,
-      onclick: submenuClicked(profile.content),
+      onclick: submenuClicked,
     })
   });
 

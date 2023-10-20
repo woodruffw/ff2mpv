@@ -8,7 +8,9 @@ function ff2mpv(url, options = []) {
   browser.tabs.executeScript({
     code: "video = document.getElementsByTagName('video');video[0].pause();"
   });
-  browser.runtime.sendNativeMessage("ff2mpv", { url, options }).catch(onError);
+  browser.runtime.sendNativeMessage("ff2mpv", { url,
+    options: options.filter(o => !!o),
+  }).catch(onError);
 }
 
 async function getOS() {

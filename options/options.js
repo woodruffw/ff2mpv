@@ -45,7 +45,9 @@
   const onSaveProfile = (event) => {
     const targetProfile = event.target.parentElement.parentElement;
     const name = targetProfile.children[0].value;
-    const content = targetProfile.children[1].value.trim().split('\n');
+    const content = targetProfile.children[1].value
+      .trim().split('\n')
+      .map(line => line.trim());
 
     if (!name) {
       return;

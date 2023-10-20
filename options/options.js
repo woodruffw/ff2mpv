@@ -61,7 +61,7 @@
       profileFunction = 'createProfile';
     }
 
-    const id = targetProfile.dataset.id || uuid();
+    const id = targetProfile.dataset.id;
     const profile = { id, name, content };
 
     backgroundPage[profileFunction](profile);
@@ -102,8 +102,7 @@
     profileDiv.classList.add('profile');
     buttonsWrapper.classList.add('buttons-wrapper');
     saveButton.classList.add('button');
-    deleteButton.classList.add('button');
-    deleteButton.classList.add('delete-button');
+    deleteButton.classList.add('button', 'delete-button');
 
     profileName.placeholder = 'Profile Name';
     profileContent.placeholder = 'mpv args (1 per line)';
@@ -117,12 +116,8 @@
     saveButton.textContent = 'save';
     deleteButton.textContent = 'delete';
 
-    buttonsWrapper.appendChild(saveButton);
-    buttonsWrapper.appendChild(deleteButton);
-
-    profileDiv.appendChild(profileName);
-    profileDiv.appendChild(profileContent);
-    profileDiv.appendChild(buttonsWrapper);
+    buttonsWrapper.append(saveButton, deleteButton);
+    profileDiv.append(profileName, profileContent, buttonsWrapper);
 
     return profileDiv;
   }

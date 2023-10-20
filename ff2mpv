@@ -6,8 +6,10 @@ require "json"
 len = $stdin.read(4).unpack1("L")
 data = JSON.parse($stdin.read(len))
 url = data["url"]
+options = data["options"] || []
 
 args = %w[--no-terminal]
+args.push(*options)
 
 # HACK(ww): On macOS, graphical applications inherit their path from `launchd`
 # rather than the default path list in `/etc/paths`. `launchd` doesn't include

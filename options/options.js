@@ -3,10 +3,6 @@
   const addButton = document.getElementById('add');
   const PROFILES = 'profiles';
 
-  const uuid = () => {
-    return crypto.randomUUID();
-  }
-
   const getProfiles = async () => {
     return (await browser.storage.sync.get(PROFILES))[PROFILES] || [];
   };
@@ -58,7 +54,7 @@
 
     // Save new profile
     if (!targetProfile.dataset.id) {
-      targetProfile.dataset.id = uuid();
+      targetProfile.dataset.id = crypto.randomUUID();
       targetProfile.classList.remove('new-profile');
       profileFunction = 'createProfile';
     }

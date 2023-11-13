@@ -1,5 +1,5 @@
 :root {
-  --light-theme-profile-odd: hsl(0, 0%, 86%);
+  --light-theme-profile-odd: hsl(0, 0%, 95%);
   --light-theme-profile-border: hsl(0, 0%, 0%);
   --light-theme-color: hsl(0, 0%, 0%);
   --light-theme-background: hsl(0, 0%, 100%);
@@ -7,6 +7,8 @@
   --light-theme-normal-button: hsl(300, 67%, 42%);
   --light-theme-delete-button: hsl(0, 100%, 50%);
   --light-theme-button-color: hsl(0, 0%, 100%);
+  --light-theme-normal-button-hover: hsl(300, 67%, 22%);
+  --light-theme-delete-button-hover: hsl(0, 100%, 30%);
 
   --dark-theme-profile-odd: hsl(255, 6%, 8%);
   --dark-theme-profile-border: hsl(0, 0%, 56%);
@@ -16,6 +18,20 @@
   --dark-theme-normal-button: hsl(300, 67%, 22%);
   --dark-theme-delete-button: hsl(0, 100%, 30%);
   --dark-theme-button-color: hsl(0, 0%, 89%);
+  --dark-theme-normal-button-hover: hsl(300, 67%, 42%);
+  --dark-theme-delete-button-hover: hsl(0, 100%, 50%);
+
+  /* Use light theme as default */
+  --profile-odd: var(--light-theme-profile-odd);
+  --profile-border: var(--light-theme-profile-border);
+  --color: var(--light-theme-color);
+  --background: var(--light-theme-background);
+  --backgraund-input: var(--light-theme-background-input);
+  --normal-button: var(--light-theme-normal-button);
+  --delete-button: var(--light-theme-delete-button);
+  --button-color: var(--light-theme-button-color);
+  --normal-button-hover: var(--light-theme-normal-button-hover);
+  --delete-button-hover: var(--light-theme-delete-button-hover);
 }
 
 body {
@@ -24,8 +40,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: var(--light-theme-color);
-  background-color: var(--light-theme-background);
+  color: var(--color);
+  background-color: var(--background);
 }
 
 #profiles-wrapper {
@@ -33,7 +49,7 @@ body {
 }
 
 .profile:nth-child(2n + 1) {
-  background-color: var(--light-theme-profile-odd);
+  background-color: var(--profile-odd);
 }
 
 .profile {
@@ -41,19 +57,19 @@ body {
   flex-direction: column;
   gap: 10px;
   box-sizing: border-box;
-  border: 2px solid var(--light-theme-profile-border);
+  border: 2px solid var(--profile-border);
   border-radius: 10px;
   padding: 10px;
 }
 
 .profile textarea, .profile input {
-  color: var(--light-theme-color);
-  background-color: var(--light-theme-background-input);
+  color: var(--color);
+  background-color: var(--background-input);
 }
 
 .profile textarea:focus-visible, .profile input:focus-visible {
   outline: dotted;
-  outline-color: var(--light-theme-profile-border);
+  outline-color: var(--profile-border);
 }
 
 .profile textarea {
@@ -65,30 +81,30 @@ body {
 }
 
 .new-profile {
-  border-color: var(--light-theme-normal-button);
+  border-color: var(--normal-button);
 }
 
 .button {
   border-radius: 5px;
-  color: var(--light-theme-button-color);
-  background-color: var(--light-theme-normal-button);
+  color: var(--button-color);
+  background-color: var(--normal-button);
 }
 
 .button:focus-visible {
   outline: dotted;
-  outline-color: var(--light-theme-profile-border);
+  outline-color: var(--profile-border);
 }
 
 .button:hover {
-  background-color: var(--dark-theme-normal-button);
+  background-color: var(--normal-button-hover);
 }
 
 .delete-button {
-  background-color: var(--light-theme-delete-button);
+  background-color: var(--delete-button);
 }
 
 .delete-button:hover {
-  background-color: var(--dark-theme-delete-button);
+  background-color: var(--delete-button-hover);
 }
 
 .buttons-wrapper {
@@ -105,50 +121,17 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-  body {
-    color: var(--dark-theme-color);
-    background-color: var(--dark-theme-background);
-  }
-
-  .profile:nth-child(2n + 1) {
-    background-color: var(--dark-theme-profile-odd);
-  }
-
-  .profile {
-    border-color: var(--dark-theme-profile-border);
-  }
-
-  .profile textarea, .profile input {
-    color: var(--dark-theme-color);
-    background-color: var(--dark-theme-background-input);
-  }
-
-  .profile textarea:focus-visible, .profile input:focus-visible {
-    outline-color: var(--dark-theme-profile-border);
-  }
-
-  .new-profile {
-    border-color: var(--dark-theme-normal-button);
-  }
-
-  .button {
-    color: var(--dark-theme-button-color);
-    background-color: var(--dark-theme-normal-button);
-  }
-
-  .button:focus-visible {
-    outline-color: var(--dark-theme-profile-border);
-  }
-
-  .button:hover {
-    background-color: var(--light-theme-normal-button);
-  }
-
-  .delete-button {
-    background-color: var(--dark-theme-delete-button);
-  }
-
-  .delete-button:hover {
-    background-color: var(--light-theme-delete-button);
+  :root {
+    /* If browser settings use dark theme, override styles */
+    --profile-odd: var(--dark-theme-profile-odd);
+    --profile-border: var(--dark-theme-profile-border);
+    --color: var(--dark-theme-color);
+    --background: var(--dark-theme-background);
+    --backgraund-input: var(--dark-theme-background-input);
+    --normal-button: var(--dark-theme-normal-button);
+    --delete-button: var(--dark-theme-delete-button);
+    --button-color: var(--dark-theme-button-color);
+    --normal-button-hover: var(--dark-theme-normal-button-hover);
+    --delete-button-hover: var(--dark-theme-delete-button-hover);
   }
 }

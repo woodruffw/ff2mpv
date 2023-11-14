@@ -9,6 +9,10 @@
   --light-theme-button-color: hsl(0, 0%, 100%);
   --light-theme-normal-button-hover: hsl(300, 67%, 22%);
   --light-theme-delete-button-hover: hsl(0, 100%, 30%);
+  --light-theme-warning-background: hsl(62, 90%, 85%);
+  --light-theme-warning-text: hsl(49, 26%, 20%);
+  --light-theme-warning-url: hsl(240, 100%, 40%);
+  --light-theme-warning-url-visited: hsl(271, 68%, 32%);
 
   --dark-theme-profile-odd: hsl(255, 6%, 8%);
   --dark-theme-profile-border: hsl(0, 0%, 56%);
@@ -20,6 +24,10 @@
   --dark-theme-button-color: hsl(0, 0%, 89%);
   --dark-theme-normal-button-hover: hsl(300, 67%, 42%);
   --dark-theme-delete-button-hover: hsl(0, 100%, 50%);
+  --dark-theme-warning-background: hsl(49, 26%, 20%);
+  --dark-theme-warning-text: hsl(45, 97%, 70%);
+  --dark-theme-warning-url: hsl(93, 65%, 50%);
+  --dark-theme-warning-url-visited: hsl(93, 45%, 30%);
 
   /* Use light theme as default */
   --profile-odd: var(--light-theme-profile-odd);
@@ -32,6 +40,10 @@
   --button-color: var(--light-theme-button-color);
   --normal-button-hover: var(--light-theme-normal-button-hover);
   --delete-button-hover: var(--light-theme-delete-button-hover);
+  --warning-background: var(--light-theme-warning-background);
+  --warning-text: var(--light-theme-warning-text);
+  --warning-url: var(--light-theme-warning-url);
+  --warning-url-visited: var(--light-theme-warning-url-visited);
 }
 
 body {
@@ -42,6 +54,26 @@ body {
   align-items: center;
   color: var(--color);
   background-color: var(--background);
+  box-sizing: border-box;
+}
+
+.warning {
+  display: flex;
+  font-size: 16px;
+  padding: 20px;
+  border: 2px solid var(--warning-text);
+  border-radius: 10px;
+  margin: 20px 0;
+  color: var(--warning-text);
+  background-color: var(--warning-background);
+}
+
+.warning a {
+  color: var(--warning-url);
+}
+
+.warning a:visited {
+  color: var(--warning-url-visited);
 }
 
 #profiles-wrapper {
@@ -133,5 +165,9 @@ body {
     --button-color: var(--dark-theme-button-color);
     --normal-button-hover: var(--dark-theme-normal-button-hover);
     --delete-button-hover: var(--dark-theme-delete-button-hover);
+    --warning-background: var(--dark-theme-warning-background);
+    --warning-text: var(--dark-theme-warning-text);
+    --warning-url: var(--dark-theme-warning-url);
+    --warning-url-visited: var(--dark-theme-warning-url-visited);
   }
 }

@@ -1,0 +1,173 @@
+:root {
+  --light-theme-profile-odd: hsl(0, 0%, 95%);
+  --light-theme-profile-border: hsl(0, 0%, 0%);
+  --light-theme-color: hsl(0, 0%, 0%);
+  --light-theme-background: hsl(0, 0%, 100%);
+  --light-theme-background-input: hsl(0, 0%, 100%);
+  --light-theme-normal-button: hsl(300, 67%, 42%);
+  --light-theme-delete-button: hsl(0, 100%, 50%);
+  --light-theme-button-color: hsl(0, 0%, 100%);
+  --light-theme-normal-button-hover: hsl(300, 67%, 22%);
+  --light-theme-delete-button-hover: hsl(0, 100%, 30%);
+  --light-theme-warning-background: hsl(62, 90%, 85%);
+  --light-theme-warning-text: hsl(49, 26%, 20%);
+  --light-theme-warning-url: hsl(240, 100%, 40%);
+  --light-theme-warning-url-visited: hsl(271, 68%, 32%);
+
+  --dark-theme-profile-odd: hsl(255, 6%, 8%);
+  --dark-theme-profile-border: hsl(0, 0%, 56%);
+  --dark-theme-color: hsl(0, 0%, 89%);
+  --dark-theme-background: hsl(255, 6%, 13%);
+  --dark-theme-background-input: hsl(255, 6%, 28%);
+  --dark-theme-normal-button: hsl(300, 67%, 22%);
+  --dark-theme-delete-button: hsl(0, 100%, 30%);
+  --dark-theme-button-color: hsl(0, 0%, 89%);
+  --dark-theme-normal-button-hover: hsl(300, 67%, 42%);
+  --dark-theme-delete-button-hover: hsl(0, 100%, 50%);
+  --dark-theme-warning-background: hsl(49, 26%, 20%);
+  --dark-theme-warning-text: hsl(45, 97%, 70%);
+  --dark-theme-warning-url: hsl(93, 65%, 50%);
+  --dark-theme-warning-url-visited: hsl(93, 45%, 30%);
+
+  /* Use light theme as default */
+  --profile-odd: var(--light-theme-profile-odd);
+  --profile-border: var(--light-theme-profile-border);
+  --color: var(--light-theme-color);
+  --background: var(--light-theme-background);
+  --backgraund-input: var(--light-theme-background-input);
+  --normal-button: var(--light-theme-normal-button);
+  --delete-button: var(--light-theme-delete-button);
+  --button-color: var(--light-theme-button-color);
+  --normal-button-hover: var(--light-theme-normal-button-hover);
+  --delete-button-hover: var(--light-theme-delete-button-hover);
+  --warning-background: var(--light-theme-warning-background);
+  --warning-text: var(--light-theme-warning-text);
+  --warning-url: var(--light-theme-warning-url);
+  --warning-url-visited: var(--light-theme-warning-url-visited);
+}
+
+body {
+  min-width: 600px;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color);
+  background-color: var(--background);
+  box-sizing: border-box;
+}
+
+.warning {
+  display: flex;
+  font-size: 16px;
+  padding: 20px;
+  border: 2px solid var(--warning-text);
+  border-radius: 10px;
+  margin: 20px 0;
+  color: var(--warning-text);
+  background-color: var(--warning-background);
+}
+
+.warning a {
+  color: var(--warning-url);
+}
+
+.warning a:visited {
+  color: var(--warning-url-visited);
+}
+
+#profiles-wrapper {
+  width: 100%;
+}
+
+.profile:nth-child(2n + 1) {
+  background-color: var(--profile-odd);
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+  border: 2px solid var(--profile-border);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.profile textarea, .profile input {
+  color: var(--color);
+  background-color: var(--background-input);
+}
+
+.profile textarea:focus-visible, .profile input:focus-visible {
+  outline: dotted;
+  outline-color: var(--profile-border);
+}
+
+.profile textarea {
+  height: 120px;
+}
+
+.profile + .profile {
+  margin-top: 10px;
+}
+
+.new-profile {
+  border-color: var(--normal-button);
+}
+
+.button {
+  border-radius: 5px;
+  color: var(--button-color);
+  background-color: var(--normal-button);
+}
+
+.button:focus-visible {
+  outline: dotted;
+  outline-color: var(--profile-border);
+}
+
+.button:hover {
+  background-color: var(--normal-button-hover);
+}
+
+.delete-button {
+  background-color: var(--delete-button);
+}
+
+.delete-button:hover {
+  background-color: var(--delete-button-hover);
+}
+
+.buttons-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+#add {
+  margin-top: 20px;
+  width: 80%;
+  height: 2rem;
+  text-align: center;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* If browser settings use dark theme, override styles */
+    --profile-odd: var(--dark-theme-profile-odd);
+    --profile-border: var(--dark-theme-profile-border);
+    --color: var(--dark-theme-color);
+    --background: var(--dark-theme-background);
+    --backgraund-input: var(--dark-theme-background-input);
+    --normal-button: var(--dark-theme-normal-button);
+    --delete-button: var(--dark-theme-delete-button);
+    --button-color: var(--dark-theme-button-color);
+    --normal-button-hover: var(--dark-theme-normal-button-hover);
+    --delete-button-hover: var(--dark-theme-delete-button-hover);
+    --warning-background: var(--dark-theme-warning-background);
+    --warning-text: var(--dark-theme-warning-text);
+    --warning-url: var(--dark-theme-warning-url);
+    --warning-url-visited: var(--dark-theme-warning-url-visited);
+  }
+}

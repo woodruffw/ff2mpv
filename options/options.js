@@ -85,9 +85,9 @@
       const backgroundPage = browser.extension.getBackgroundPage();
 
       backgroundPage.deleteProfile(id);
-    }
 
-    return deleteProfile(id);
+      return deleteProfile(id);
+    }
   };
 
   const createProfile = ({ name = '', content = [], id }) => {

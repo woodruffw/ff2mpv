@@ -45,24 +45,29 @@
       .trim().split('\n')
       .map(line => line.trim());
 
+    // We need at least a name to save the profile
+    // or it won't have text on the menu context
     if (!name) {
       return;
     }
 
     const backgroundPage = browser.extension.getBackgroundPage();
-    let profileFunction = 'updateProfile';
 
-    // Save new profile
+    // Save profile if it doesn't have an id
     if (!targetProfile.dataset.id) {
       targetProfile.dataset.id = crypto.randomUUID();
       targetProfile.classList.remove('new-profile');
-      profileFunction = 'createProfile';
+
+      const id = targetProfile.dataset.id;
+      const profile = { id, name, content };
+      backgroundPage.createProfile(profile);
+
+      return saveProfile(profile);
     }
 
     const id = targetProfile.dataset.id;
     const profile = { id, name, content };
-
-    backgroundPage[profileFunction](profile);
+    backgroundPage.updateProfile(profile);
 
     return saveProfile(profile);
   };

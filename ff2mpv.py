@@ -29,7 +29,7 @@ def main():
     # Hence this nasty hack.
     if platform.system() == "Darwin":
         path = os.environ.get("PATH")
-        os.environ["PATH"] = f"/usr/local/bin:{path}"
+        os.environ["PATH"] = f"/usr/local/bin:/opt/homebrew/bin:{path}"
 
     subprocess.Popen(args, **kwargs)
 

@@ -103,7 +103,7 @@ getOS().then(async (os) => {
   // ref: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessageExternal
   browser.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
     if (!request) {
-      console.wanr('No request in external message');
+      console.warn('No request in external message');
       return;
     }
 

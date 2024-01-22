@@ -108,7 +108,7 @@ getOS().then(async (os) => {
     }
 
     const { type, url } = request;
-    console.info('Request from:', sender);
+    console.debug('Request from:', sender);
 
     switch (type) {
       case OPEN_VIDEO:

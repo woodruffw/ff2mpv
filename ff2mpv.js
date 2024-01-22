@@ -4,6 +4,8 @@ function onError(error) {
   console.log(`${error}`);
 }
 
+const OPEN_VIDEO = 'openVideo';
+
 function ff2mpv(url, options = []) {
   browser.tabs.executeScript({
     code: "video = document.getElementsByTagName('video');video[0].pause();"
@@ -95,5 +97,26 @@ getOS().then(async (os) => {
 
   browser.browserAction.onClicked.addListener((tab) => {
     ff2mpv(tab.url);
+  });
+
+  // Messages sent with browser.runtime.sendMessage (https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/sendMessage) from external applications will be handle here.
+  // ref: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/runtime/onMessageExternal
+  browser.runtime.onMessageExternal.addListener((request, sender, sendResponse) => {
+    if (!request) {
+      console.wanr('No request in external message');
+      return;
+    }
+
+    const { type, url } = request;
+    console.info('Request from:', sender);
+
+    switch (type) {
+      case OPEN_VIDEO:
+        ff2mpv(url);
+        return sendResponse('ok');
+      default:
+        console.warn('No handler for external type:', type);
+        return;
+    }
   });
 });

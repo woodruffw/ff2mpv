@@ -32,21 +32,60 @@ async function getOptions(id) {
 }
 
 async function submenuClicked(info) {
-  switch (info.parentMenuItemId) {
-    case "ff2mpv":
-      /* These should be mutually exclusive, but,
-         if they aren't, this is a reasonable priority.
-      */
-      url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
-      if (url) {
-        const options = await getOptions(info.menuItemId);
-        ff2mpv(url, options);
-      }
-    break;
+  if (info.parentMenuItemId === 'ff2mpv' || info.menuItemId === 'ff2mpv') {
+    /* These should be mutually exclusive, but,
+       if they aren't, this is a reasonable priority.
+    */
+    const url = info.linkUrl || info.srcUrl || info.selectionText || info.frameUrl;
+    if (url) {
+      const options = await getOptions(info.menuItemId);
+      ff2mpv(url, options);
+    }
   }
 }
 
-function createProfile(profile) {
+let os = '';
+
+function changeToMultiEntries() {
+  // Remove single entry
+  browser.contextMenus.remove('ff2mpv');
+
+  // Add sub context menu
+  browser.contextMenus.create({
+    id: "ff2mpv",
+    title: "Profiles",
+    contexts,
+    onclick: submenuClicked,
+  });
+
+  browser.contextMenus.create({
+    parentId: "ff2mpv",
+    title: os === "win" ? "Play in MP&V" : "Play in MPV (&W)",
+    contexts,
+    onclick: submenuClicked,
+  });
+}
+
+function changeToSingleEntry() {
+  // Remove sub context menu
+  browser.contextMenus.remove('ff2mpv');
+
+  // Add single entry
+  browser.contextMenus.create({
+    id: "ff2mpv",
+    title: os === "win" ? "Play in MP&V" : "Play in MPV (&W)",
+    contexts,
+    onclick: submenuClicked,
+  });
+}
+
+async function createProfile(profile) {
+  const profiles = await getProfiles();
+
+  if (profiles.length === 0) {
+    changeToMultiEntries();
+  }
+
   browser.contextMenus.create({
     parentId: "ff2mpv",
     id: profile.id,
@@ -56,8 +95,15 @@ function createProfile(profile) {
   })
 }
 
-function deleteProfile(menuItemId) {
+async function deleteProfile(menuItemId) {
   browser.contextMenus.remove(menuItemId);
+
+  const profiles = (await getProfiles())
+    .filter(pf => pf.id !== menuItemId);
+
+  if (profiles.length === 0) {
+    changeToSingleEntry();
+  }
 }
 
 function updateProfile(profile) {
@@ -66,34 +112,26 @@ function updateProfile(profile) {
   });
 }
 
-getOS().then(async (os) => {
-  var title = os == "win" ? "Play in MP&V" : "Play in MPV (&W)";
-
-  browser.contextMenus.create({
-    id: "ff2mpv",
-    title: "Profiles",
-    contexts,
-  });
-
-  // Default entry
-  browser.contextMenus.create({
-    parentId: "ff2mpv",
-    title,
-    contexts,
-    onclick: submenuClicked,
-  });
+getOS().then(async (_os) => {
+  os = _os;
 
   const profiles = await getProfiles();
 
-  profiles.forEach(profile => {
-    browser.contextMenus.create({
-      parentId: "ff2mpv",
-      id: profile.id,
-      title: profile.name,
-      contexts,
-      onclick: submenuClicked,
-    })
-  });
+  if (profiles.length === 0) {
+    changeToSingleEntry();
+  } else {
+    changeToMultiEntries();
+
+    profiles.forEach(profile => {
+      browser.contextMenus.create({
+        parentId: "ff2mpv",
+        id: profile.id,
+        title: profile.name,
+        contexts,
+        onclick: submenuClicked,
+      })
+    });
+  }
 
   browser.browserAction.onClicked.addListener((tab) => {
     ff2mpv(tab.url);

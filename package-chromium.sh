@@ -30,6 +30,7 @@ while read -r file; do
 done < dist.files
 
 # chromium generates dist.pem on first use
+# NOTE(2024-01): This seems to be broken for MV2 extensions.
 if [ -f dist.pem ]; then
   "${browser}" --pack-extension=dist --pack-extension-key=dist.pem
 else

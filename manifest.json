@@ -2,7 +2,7 @@
     "description": "Tries to play links in MPV",
     "manifest_version": 2,
     "name": "ff2mpv",
-    "version": "5.0.1",
+    "version": "5.1.0",
     "options_ui": {
         "page": "options/options.html",
         "open_in_tab": false

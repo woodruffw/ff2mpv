@@ -37,7 +37,7 @@ async function getOptions(id) {
       ? profile.content.filter(line => !!line)
       : [];
   } catch (error) {
-    console.debug(`Unable to get options for profile:`, id, error);
+    console.debug('Unable to get options for profile:', id, error);
     return [];
   }
 }

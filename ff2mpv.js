@@ -19,17 +19,27 @@ async function getOS() {
 }
 
 async function getProfiles() {
-  return (await browser.storage.sync.get('profiles'))['profiles'] || [];
+  try {
+    return (await browser.storage.sync.get('profiles'))['profiles'] || [];
+  } catch (error) {
+    console.debug('Unable to get profiles:', error);
+    return [];
+  }
 };
 
 async function getOptions(id) {
-  const profiles = await getProfiles();
-  const profile = profiles.find(pf => pf.id === id);
+  try {
+    const profiles = await getProfiles();
+    const profile = profiles.find(pf => pf.id === id);
 
-  // If profile, remove empty lines
-  return profile
-    ? profile.content.filter(line => !!line)
-    : [];
+    // If profile, remove empty lines
+    return profile
+      ? profile.content.filter(line => !!line)
+      : [];
+  } catch (error) {
+    console.debug(`Unable to get options for profile:`, id, error);
+    return [];
+  }
 }
 
 async function submenuClicked(info) {
@@ -47,7 +57,9 @@ async function submenuClicked(info) {
 
 function changeToMultiEntries() {
   // Remove single entry
-  browser.contextMenus.remove('ff2mpv');
+  try {
+    browser.contextMenus.remove('ff2mpv');
+  } catch (error) {}
 
   // Add sub context menu
   browser.contextMenus.create({
@@ -67,7 +79,9 @@ function changeToMultiEntries() {
 
 function changeToSingleEntry() {
   // Remove sub context menu
-  browser.contextMenus.remove('ff2mpv');
+  try {
+    browser.contextMenus.remove('ff2mpv');
+  } catch (error) {}
 
   // Add single entry
   browser.contextMenus.create({

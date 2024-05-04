@@ -18,7 +18,7 @@ args.push(*options)
 # from, say, Firefox. The real fix is to modify `launchd.conf`, but that's
 # invasive and maybe not what users want in the general case.
 # Hence this nasty hack.
-ENV["PATH"] = "/usr/local/bin:/opt/homebrew/bin:#{ENV['PATH']}" if RUBY_PLATFORM =~ /darwin/
+ENV["PATH"] = "/opt/homebrew/bin:/usr/local/bin:#{ENV['PATH']}" if RUBY_PLATFORM =~ /darwin/
 
 pid = spawn "mpv", *args, "--", url, in: :close, out: "/dev/null", err: "/dev/null"
 

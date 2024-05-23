@@ -2,9 +2,26 @@
   const profilesWrapper = document.getElementById('profiles-wrapper');
   const addButton = document.getElementById('add');
   const PROFILES = 'profiles';
+  const CREATE_PROFILE = 'createProfile';
+  const UPDATE_PROFILE = 'updateProfile';
+  const DELETE_PROFILE = 'deleteProfile';
+
+  const sendMessage = (message) => {
+    chrome.runtime.sendMessage(message, (response) => {
+      // Chrome check for errors.
+      if (chrome.runtime.lastError) {
+        console.error(`There was an error with the message of type: ${message.type}`, chrome.runtime.lastError);
+      }
+    })
+  };
 
   const getProfiles = async () => {
-    return (await browser.storage.sync.get(PROFILES))[PROFILES] || [];
+    try {
+      return (await chrome.storage.sync.get(PROFILES))[PROFILES] || [];
+    } catch (error) {
+      console.debug('Unable to get profiles:', error);
+      return [];
+    }
   };
 
   const saveProfile = async (profile) => {
@@ -28,14 +45,14 @@
       };
     }
 
-    return browser.storage.sync.set(updatedProfiles);
+    return chrome.storage.sync.set(updatedProfiles);
   };
 
   const deleteProfile = async (id) => {
     const storedProfiles = await getProfiles();
     const updatedProfiles = storedProfiles.filter(sp => sp.id !== id);
 
-    return browser.storage.sync.set({ [PROFILES]: updatedProfiles });
+    return chrome.storage.sync.set({ [PROFILES]: updatedProfiles });
   };
 
   const onSaveProfile = (event) => {
@@ -51,8 +68,6 @@
       return;
     }
 
-    const backgroundPage = browser.extension.getBackgroundPage();
-
     // Save profile if it doesn't have an id
     if (!targetProfile.dataset.id) {
       targetProfile.dataset.id = crypto.randomUUID();
@@ -60,14 +75,14 @@
 
       const id = targetProfile.dataset.id;
       const profile = { id, name, content };
-      backgroundPage.createProfile(profile);
+      sendMessage({ type: CREATE_PROFILE, profile });
 
       return saveProfile(profile);
     }
 
     const id = targetProfile.dataset.id;
     const profile = { id, name, content };
-    backgroundPage.updateProfile(profile);
+    sendMessage({ type: UPDATE_PROFILE, profile });
 
     return saveProfile(profile);
   };
@@ -82,9 +97,7 @@
     profilesWrapper.removeChild(targetProfile);
 
     if (id) {
-      const backgroundPage = browser.extension.getBackgroundPage();
-
-      backgroundPage.deleteProfile(id);
+      sendMessage({ type: DELETE_PROFILE, profile: { id } });
 
       return deleteProfile(id);
     }

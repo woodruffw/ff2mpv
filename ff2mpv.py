@@ -51,7 +51,7 @@ def get_message():
 def send_message(message):
     # https://stackoverflow.com/a/56563264
     # https://docs.python.org/3/library/json.html#basic-usage
-    # To get the most compact JSON representation, you should specify 
+    # To get the most compact JSON representation, you should specify
     # (',', ':') to eliminate whitespace.
     content = json.dumps(message, separators=(",", ":")).encode("utf-8")
     length = struct.pack("@I", len(content))

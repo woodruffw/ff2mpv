@@ -142,7 +142,7 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
       return sendResponse("ok");
     default:
       console.warn("No handler for external type:", type);
-      return;
+      return sendResponse("failure");
   }
 });
 
@@ -188,6 +188,6 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
       return sendResponse("ok");
     default:
       console.warn("No handler for type:", type);
-      return;
+      return sendResponse("failure");
   }
 });

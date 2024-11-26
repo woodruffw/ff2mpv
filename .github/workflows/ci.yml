@@ -54,6 +54,5 @@ jobs:
       - uses: actions/checkout@v3
       - name: eslint
         run: |
-          sudo npm install eslint --global
-          eslint --no-eslintrc --parser-options=ecmaVersion:8 ff2mpv.js
+          npx eslint --no-eslintrc ff2mpv.js
 

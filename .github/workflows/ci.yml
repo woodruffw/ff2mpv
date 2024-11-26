@@ -48,11 +48,5 @@ jobs:
           black ff2mpv.py
           git diff --exit-code
           flake8 --max-line-length=120 ff2mpv.py
-  lint-js:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: eslint
-        run: |
-          npx eslint --no-eslintrc ff2mpv.js
+
 

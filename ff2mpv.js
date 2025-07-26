@@ -4,7 +4,7 @@ const UPDATE_PROFILE = "updateProfile";
 const DELETE_PROFILE = "deleteProfile";
 const PROFILES = "profiles";
 const OPEN_VIDEO = "openVideo";
-const TITLES = ["Play in MPV", "Profiles"];
+const TITLES = ["Play in MPV (&X)", "Profiles (&X)"];
 
 function onError(error) {
   console.log(`${error}`);
@@ -21,21 +21,6 @@ function ff2mpv(url, tabId, options) {
   }
   options = options ? options : [];
   chrome.runtime.sendNativeMessage("ff2mpv", { url, options }).catch(onError);
-}
-
-async function getMnemonicTitle(title) {
-  let key = "X";
-  if (typeof browser === "object") {
-    try {
-      await chrome.runtime.sendMessage("@testpilot-containers", {}, {});
-    }
-    catch (error) {
-      if (error.message === "Could not establish connection. Receiving end does not exist.") {
-        key = "W";
-	  }
-	}
-  }
-  return `${title} (&${key})`;
 }
 
 async function getProfiles() {
@@ -82,14 +67,14 @@ async function changeToMultiEntries() {
   // Add sub context menu
   await chrome.contextMenus.create({
     id: "ff2mpv",
-    title: await getMnemonicTitle(TITLES[1]),
+    title: TITLES[1],
     contexts,
   });
 
   await chrome.contextMenus.create({
     parentId: "ff2mpv",
     id: "22941114-4db3-4296-8fc2-49f178843f52",
-    title: await getMnemonicTitle(TITLES[0]),
+    title: TITLES[0],
     contexts,
   });
 }
@@ -100,7 +85,7 @@ async function changeToSingleEntry() {
 
   await chrome.contextMenus.create({
     id: "ff2mpv",
-    title: await getMnemonicTitle(TITLES[0]),
+    title: TITLES[0],
     contexts,
   });
 }

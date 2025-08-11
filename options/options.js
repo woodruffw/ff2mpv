@@ -55,7 +55,7 @@
     return chrome.storage.sync.set({ [PROFILES]: updatedProfiles });
   };
 
-  const onSaveProfile = (event) => {
+  const onSaveProfile = async (event) => {
     const targetProfile = event.target.parentElement.parentElement;
     const name = targetProfile.children[0].value;
     const content = targetProfile.children[1].value
@@ -75,19 +75,19 @@
 
       const id = targetProfile.dataset.id;
       const profile = { id, name, content };
+      await saveProfile(profile);
       sendMessage({ type: CREATE_PROFILE, profile });
-
-      return saveProfile(profile);
+      return;
     }
 
     const id = targetProfile.dataset.id;
     const profile = { id, name, content };
+    await saveProfile(profile);
     sendMessage({ type: UPDATE_PROFILE, profile });
-
-    return saveProfile(profile);
+    return;
   };
 
-  const onDeleteProfile = (event) => {
+  const onDeleteProfile = async (event) => {
     const targetProfile = event.target.parentElement.parentElement;
     const buttonsWrapper = targetProfile.children[2];
     const id = targetProfile.dataset.id;
@@ -97,9 +97,8 @@
     profilesWrapper.removeChild(targetProfile);
 
     if (id) {
+      await deleteProfile(id);
       sendMessage({ type: DELETE_PROFILE, profile: { id } });
-
-      return deleteProfile(id);
     }
   };
 

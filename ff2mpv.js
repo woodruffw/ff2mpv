@@ -60,18 +60,35 @@ async function submenuClicked(info, tab) {
   }
 }
 
+/**
+ * Small wrapper to promisify chrome.contextMenus.create
+ * to match other chrome APIs that are promise based.
+ * @see https://developer.chrome.com/docs/extensions/reference/api/contextMenus#method-create
+ * @param {chrome.contextMenus.CreateProperties} properties
+ */
+function createContextMenuPromise(properties) {
+  return new Promise((resolve, reject) => {
+    chrome.contextMenus.create(properties, () => {
+      if (chrome.runtime.lastError) {
+        return reject(chrome.runtime.lastError);
+      }
+      resolve();
+    });
+  });
+}
+
 async function changeToMultiEntries() {
   // Remove single entry
   await chrome.contextMenus.removeAll();
 
   // Add sub context menu
-  await chrome.contextMenus.create({
+  await createContextMenuPromise({
     id: "ff2mpv",
     title: "Profiles",
     contexts,
   });
 
-  await chrome.contextMenus.create({
+  await createContextMenuPromise({
     parentId: "ff2mpv",
     id: "22941114-4db3-4296-8fc2-49f178843f52",
     title: TITLE,
@@ -83,26 +100,33 @@ async function changeToSingleEntry() {
   // Remove sub context menu
   await chrome.contextMenus.removeAll();
 
-  await chrome.contextMenus.create({
+  await createContextMenuPromise({
     id: "ff2mpv",
     title: TITLE,
     contexts,
   });
 }
 
-async function createProfile(profile) {
+async function createContextMenusFromProfiles(profiles) {
+  for (const profile of profiles) {
+    await createContextMenuPromise({
+      parentId: "ff2mpv",
+      id: profile.id,
+      title: profile.name,
+      contexts,
+    });
+  }
+}
+
+async function refreshProfiles() {
   const profiles = await getProfiles();
 
   if (profiles.length === 0) {
+    await changeToSingleEntry();
+  } else {
     await changeToMultiEntries();
+    await createContextMenusFromProfiles(profiles)
   }
-
-  await chrome.contextMenus.create({
-    parentId: "ff2mpv",
-    id: profile.id,
-    title: profile.name,
-    contexts,
-  });
 }
 
 async function deleteProfile(menuItemId) {
@@ -153,16 +177,7 @@ chrome.runtime.onInstalled.addListener(async (_) => {
     await changeToSingleEntry();
   } else {
     await changeToMultiEntries();
-
-    await profiles.reduce(async (promise, profile) => {
-      await promise;
-      await chrome.contextMenus.create({
-        parentId: "ff2mpv",
-        id: profile.id,
-        title: profile.name,
-        contexts,
-      });
-    }, Promise.resolve());
+    await createContextMenusFromProfiles(profiles)
   }
 });
 
@@ -178,7 +193,7 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
 
   switch (type) {
     case CREATE_PROFILE:
-      await createProfile(profile);
+      await refreshProfiles();
       return sendResponse("ok");
     case UPDATE_PROFILE:
       await updateProfile(profile);

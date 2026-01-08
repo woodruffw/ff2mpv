@@ -3,6 +3,7 @@ const CREATE_PROFILE = "createProfile";
 const UPDATE_PROFILE = "updateProfile";
 const DELETE_PROFILE = "deleteProfile";
 const PROFILES = "profiles";
+const GET_PROFILES = "getProfiles";
 const OPEN_VIDEO = "openVideo";
 const TITLE = "Play in MPV";
 
@@ -157,16 +158,32 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
     return;
   }
 
-  const { type, url } = request;
+  const { type, url, profileId } = request;
   console.debug("Request from:", sender);
+
+  const tabId = null;
 
   switch (type) {
     case OPEN_VIDEO:
-      ff2mpv(url);
-      return sendResponse("ok");
-    default:
-      console.warn("No handler for external type:", type);
-      return sendResponse("failure");
+        let optionsPromise;
+          if (profileId) {
+            optionsPromise = getOptions(profileId); 
+          } else {
+            optionsPromise = Promise.resolve([]); 
+          }
+          optionsPromise.then((options) => {
+            ff2mpv(url, tabId, options);
+            return sendResponse("ok");
+          });
+          break;
+        case GET_PROFILES:
+          getProfiles().then((profiles) => {
+            sendResponse(profiles); 
+          });
+          return true;
+        default:
+          console.warn("No handler for external type:", type);
+          return sendResponse("failure");
   }
 });
 

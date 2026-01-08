@@ -4,7 +4,7 @@ const UPDATE_PROFILE = "updateProfile";
 const DELETE_PROFILE = "deleteProfile";
 const PROFILES = "profiles";
 const OPEN_VIDEO = "openVideo";
-const TITLE = "Play in MPV";
+const TITLES = ["Play in MPV (&X)", "Profiles (&X)"];
 
 function onError(error) {
   console.log(`${error}`);
@@ -84,14 +84,14 @@ async function changeToMultiEntries() {
   // Add sub context menu
   await createContextMenuPromise({
     id: "ff2mpv",
-    title: "Profiles",
+    title: TITLES[1],
     contexts,
   });
 
   await createContextMenuPromise({
     parentId: "ff2mpv",
     id: "22941114-4db3-4296-8fc2-49f178843f52",
-    title: TITLE,
+    title: TITLES[0],
     contexts,
   });
 }
@@ -102,7 +102,7 @@ async function changeToSingleEntry() {
 
   await createContextMenuPromise({
     id: "ff2mpv",
-    title: TITLE,
+    title: TITLES[0],
     contexts,
   });
 }

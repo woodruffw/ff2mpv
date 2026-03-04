@@ -38,7 +38,7 @@ def main():
     send_message("ok")
 
 
-# https://developer.mozilla.org/en-US/Add-ons/WebExtensions/Native_messaging#App_side
+# https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging
 def get_message():
     raw_length = sys.stdin.buffer.read(4)
     if not raw_length:
